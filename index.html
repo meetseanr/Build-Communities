@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Noti-sub Prototype v0.2 — Build AU</title>
+<title>Objective Build - Communities</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 :root {
@@ -261,6 +261,58 @@ mark.ex sup { font-size:9px; font-weight:700; color:#5a3d9e; margin-left:2px; }
 .mapbox { flex:1; min-height:200px; border-radius:6px; overflow:hidden; }
 .mapbox svg { width:100%; height:100%; display:block; }
 @media (max-width:1100px) { .ogrid { grid-template-columns:repeat(2,1fr); } }
+/* Google map + dots */
+.gmap { position:relative; height:420px; border-radius:8px; overflow:hidden; background:#e8eaed; }
+.gmap-fallback { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; text-align:center; font-size:12px; color:var(--ink-light); padding:20px; z-index:0; }
+.gmap iframe { z-index:1; position:absolute; inset:0; width:100%; height:100%; border:0; pointer-events:none; }
+.gdot { position:absolute; width:12px; height:12px; margin:-6px 0 0 -6px; border-radius:50%; border:2px solid white; box-shadow:0 1px 3px rgba(0,0,0,.35); z-index:2; }
+.gdot.site { width:18px; height:18px; margin:-9px 0 0 -9px; background:#1d1d1f; }
+.gdot.obj { background:#ff3b30; } .gdot.part { background:#ff9500; } .gdot.sup { background:#34c759; }
+.gdot.notified { background:white; border:2px solid #8e8e93; }
+.gdot.qa { box-shadow:0 0 0 3px #b81d14, 0 1px 3px rgba(0,0,0,.35); }
+.legend i.lg { width:10px; height:10px; border-radius:50%; display:inline-block; margin-right:4px; vertical-align:-1px; }
+i.lg.site { background:#1d1d1f; } i.lg.obj { background:#ff3b30; } i.lg.part { background:#ff9500; } i.lg.sup { background:#34c759; }
+i.lg.notified { background:white; border:2px solid #8e8e93; } i.lg.qa { background:white; box-shadow:0 0 0 2px #b81d14; }
+/* Notice management */
+.nm-wrap { display:grid; grid-template-columns:2fr 1fr; gap:16px; }
+.nsteps { display:flex; align-items:center; gap:8px; }
+.nstep { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--ink-light); white-space:nowrap; }
+.nstep span { width:20px; height:20px; border-radius:50%; border:1.5px solid var(--border); display:inline-flex; align-items:center; justify-content:center; font-size:10px; font-weight:600; }
+.nstep.done { color:var(--ink-med); } .nstep.done span { background:var(--ink-med); border-color:var(--ink-med); color:white; }
+.nstep.cur { color:var(--ink); font-weight:600; } .nstep.cur span { border-color:#2f55b8; color:#2f55b8; box-shadow:0 0 0 3px #e7eefc; }
+.nline { flex:1; height:1.5px; background:var(--border); min-width:16px; }
+.field input[type=checkbox], .field input[type=radio] { width:auto; padding:0; margin:0; }
+.field label.row { display:flex; font-weight:400; margin-bottom:0; color:var(--ink-med); font-size:12px; }
+.field input:disabled, .field select:disabled, .field textarea:disabled { background:var(--neutral-bg); color:var(--ink-med); }
+/* Typeahead */
+.ta-wrap { position:relative; }
+.ta-list { display:none; position:absolute; left:0; right:0; top:58px; background:white; border:1px solid var(--border); border-radius:8px; box-shadow:var(--shadow-lg); z-index:5; max-height:260px; overflow:auto; }
+.ta-list.show { display:block; }
+.ta-item { display:flex; justify-content:space-between; align-items:center; gap:8px; padding:8px 10px; cursor:pointer; border-bottom:1px solid var(--border-light); }
+.ta-item:hover { background:#f3f6fd; }
+.ta-new { color:#2f55b8; font-size:12px; font-weight:600; }
+@media (max-width:1100px) { .nm-wrap { grid-template-columns:1fr; } }
+.ai-ico { color:#7c5ce0; font-size:12px; line-height:1; }
+.ai-ico.pending { animation:glow 2s ease-in-out infinite; }
+.dtable tr.duprow td { background:#fafafc; color:var(--ink-light); font-size:11px; }
+.dtable tr.duprow td.strong { padding-left:22px; }
+.srclink { display:inline-flex; align-items:center; gap:4px; color:var(--info-text); background:var(--info-bg); padding:2px 8px; border-radius:10px; font-size:11px; cursor:help; }
+.kebab { border:none; background:none; font-size:18px; line-height:1; color:var(--ink-light); cursor:pointer; padding:2px 8px; border-radius:6px; }
+.kebab:hover { background:var(--neutral-bg); color:var(--ink); }
+.menu { position:absolute; z-index:140; width:200px; background:white; border:1px solid var(--border); border-radius:8px; box-shadow:var(--shadow-lg); padding:4px 0; display:none; }
+.menu.show { display:block; }
+.menu-item { padding:8px 14px; font-size:12px; cursor:pointer; color:var(--ink); }
+.menu-item:hover { background:#f3f6fd; }
+details.audit-box > summary { cursor:pointer; list-style:none; margin-bottom:0; justify-content:flex-start; }
+details.audit-box > summary .tiny { margin-left:auto; }
+details.audit-box > summary::before { content:'▸'; color:var(--ink-light); margin-right:6px; display:inline-block; transition:transform .15s; }
+details.audit-box[open] > summary::before { transform:rotate(90deg); }
+details.audit-box > summary::-webkit-details-marker { display:none; }
+details.mapcard { padding:14px 16px; }
+details.mapcard > summary { cursor:pointer; list-style:none; margin-bottom:10px; }
+details.mapcard > summary::-webkit-details-marker { display:none; }
+details.mapcard > summary::before { content:'▸'; color:var(--ink-light); margin-right:6px; display:inline-block; transition:transform .15s; }
+details.mapcard[open] > summary::before { transform:rotate(90deg); }
 /* Report preview */
 .doc { background:white; max-width:860px; margin:0 auto; padding:40px 56px; border-radius:6px; box-shadow:var(--shadow-md); border:1px solid var(--border-light); font-size:13px; color:#222; line-height:1.6; }
 .doc h2 { font-size:16px; margin:18px 0 8px; }
@@ -302,7 +354,7 @@ mark.ex sup { font-size:9px; font-weight:700; color:#5a3d9e; margin-left:2px; }
 </nav>
 <div class="main-area">
   <div class="topbar">
-    <div class="logo">Build AU<span>Noti-sub · notifications, submissions &amp; issues</span></div>
+    <div class="logo">Objective Build - Communities</div>
     <div class="topbar-right">
       <div class="topbar-search-wrap"><span class="topbar-search-icon">&#x2315;</span><input class="topbar-search" placeholder="Search DAs, addresses..."></div>
       <div class="user-meta"><b>Sean Richards</b><span>Assessing Officer</span></div>
@@ -316,7 +368,8 @@ mark.ex sup { font-size:9px; font-weight:700; color:#5a3d9e; margin-left:2px; }
 <div class="drawer" id="drawer"></div>
 <div class="modal" id="modal"></div>
 <div class="toast" id="toast"></div>
-<div class="proto-tag">Build AU — Noti-sub Prototype v0.2 — Sean Richards (Assessing Officer) — This is a concept demonstration only and does not conform to the Objective Design Language. Commercial in confidence.</div>
+<div class="menu" id="menu"></div>
+<div class="proto-tag">Objective Build - Communities — Prototype v0.6 — Sean Richards (Assessing Officer) — This is a concept demonstration only and does not conform to the Objective Design Language. Commercial in confidence.</div>
 <script>
 
 /* ================= DATA (v0.2 — DA489831, Paddington) ================= */
@@ -327,7 +380,7 @@ let clock = 10*60+12;
 function stamp(){ clock += 1; const h=Math.floor(clock/60), m=clock%60; const hh=((h+11)%12)+1; return `${NOW}, ${hh}:${String(m).padStart(2,'0')} ${h<12?'AM':'PM'}`; }
 
 const APP = {
-  id:'DA489831', pan:'PAN-20610034', address:'188 Walter Street, Paddington NSW 2021', submitted:'03 Oct 2026', lodged:'14 Oct 2026', age:33,
+  id:'DA489831', pan:'PAN-20610034', address:'18 Walter Street, Paddington NSW 2021', submitted:'03 Oct 2026', lodged:'14 Oct 2026', age:33,
   type:'Development application', devType:'Residential', edc:'AU$3,493,681',
   desc:'Dwelling house, swimming pool and associated safety barriers', applicant:'Jude (North) Mohr',
   lep:'Woollahra Local Environmental Plan 2014', zone:'R2: Low Density Residential', hob:'9.5 m', fsr:'Not provided', minLot:'230 m²',
@@ -341,84 +394,74 @@ const NOTIF = {
   decision:'Exhibit', minDays:14,
   basis:'Both development types are listed in CPP Table 6, but the application seeks a cl 4.6 variation to the height of buildings standard. The Table 6 exclusion does not apply.',
   ruleVersion:'NSW-CPP-2026.09 · rules v1.3', confirmedBy:'SR', confirmedAt:'15 Oct 2026, 9:12 AM',
-  letters:'15 Oct 2026', start:'16 Oct 2026', end:'30 Oct 2026',
-  methods:[
-    {m:'Letters to owners & occupiers', d:'15 Oct', ev:'Mail-house manifest · 14 properties, 19 letters', ok:true},
-    {m:'Site notice', d:'16 Oct', ev:'Geotagged photo uploaded by SR', ok:true},
-    {m:'Council DA tracker', d:'16 Oct', ev:'Published 8:02 AM', ok:true},
-    {m:'NSW Planning Portal exhibition', d:'16 Oct', ev:'EXH-1176305 · synced', ok:true}
-  ],
-  amendments:[ {ref:'Amendment A1', date:'6 Nov 2026', via:'NSW Planning Portal (response to RFI Round 1)', decision:'Re-notification not required', why:'Changes reduce bulk at the front and fix plan details; no new or greater impact on neighbours. cl 4.6 variation unchanged.', by:'SR', at:'7 Nov 2026, 10:40 AM', rule:'Exhibit decision re-run: Exhibit (unchanged)'} ]
+  rounds:[ {n:1, required:true, notReason:'', period:14, extReason:'', start:'2026-10-16', status:'Closed', methods:{letters:true, site:true, web:true, portal:true}, by:'SR'} ]
 };
 
 const LOTS = {
-  '182W':{addr:'182 Walter St', side:'W', idx:0, notified:true, rel:'Other'},
-  '184W':{addr:'184 Walter St', side:'W', idx:1, notified:true, rel:'Other — two lots north'},
-  '186W':{addr:'186 Walter St', side:'W', idx:2, notified:true, rel:'Side boundary (north)'},
-  '188W':{addr:'188 Walter St', side:'W', idx:3, subject:true},
-  '190W':{addr:'190 Walter St', side:'W', idx:4, notified:true, rel:'Side boundary (south)'},
-  '192W':{addr:'192 Walter St (SP 50122)', side:'W', idx:5, notified:true, partial:true, rel:'Other — two lots south'},
-  '194W':{addr:'194 Walter St', side:'W', idx:6, notified:true, rel:'Other'},
-  '183W':{addr:'183 Walter St', side:'E', idx:1, notified:true, rel:'Opposite'},
-  '185W':{addr:'185 Walter St', side:'E', idx:2, notified:true, rel:'Opposite'},
-  '187W':{addr:'187 Walter St', side:'E', idx:3, notified:true, rel:'Opposite'},
-  '189W':{addr:'189 Walter St', side:'E', idx:4, notified:true, rel:'Opposite'},
-  '191W':{addr:'191 Walter St', side:'E', idx:5, notified:true, rel:'Opposite'},
-  '9J':{addr:'9 Jersey Rd', side:'R', idx:2, notified:true, rel:'Rear boundary'},
-  '11J':{addr:'11 Jersey Rd', side:'R', idx:3, notified:true, rel:'Rear boundary'},
-  '13J':{addr:'13 Jersey Rd', side:'R', idx:4, notified:true, rel:'Rear boundary'}
+  '182W':{ext:'3041127', addr:'12 Walter St', side:'W', idx:0, notified:true, rel:'Other'},
+  '184W':{ext:'3041135', addr:'14 Walter St', side:'W', idx:1, notified:true, rel:'Other — two lots north'},
+  '186W':{ext:'3041143', addr:'16 Walter St', side:'W', idx:2, notified:true, rel:'Side boundary (north)'},
+  '188W':{ext:'3041151', addr:'18 Walter St', side:'W', idx:3, subject:true},
+  '190W':{ext:'3041160', addr:'20 Walter St', side:'W', idx:4, notified:true, rel:'Side boundary (south)'},
+  '192W':{ext:'3041178', addr:'22 Walter St', side:'W', idx:5, notified:true, rel:'Other — two lots south'},
+  '194W':{ext:'3041186', addr:'24 Walter St', side:'W', idx:6, notified:true, returned:true, rel:'Other — three lots south'},
+  '183W':{ext:'3041631', addr:'15 Walter St', side:'E', idx:1, notified:true, rel:'Opposite'},
+  '185W':{ext:'3041640', addr:'17 Walter St', side:'E', idx:2, notified:true, rel:'Opposite'},
+  '187W':{ext:'3041658', addr:'19 Walter St', side:'E', idx:3, notified:true, rel:'Opposite'},
+  '189W':{ext:'3041666', addr:'21 Walter St', side:'E', idx:4, notified:true, rel:'Opposite'},
+  '191W':{ext:'3041674', addr:'23 Walter St', side:'E', idx:5, notified:true, rel:'Opposite'}
 };
-const RECIPIENT_COUNT = 14;
+const RECIPIENT_COUNT = Object.values(LOTS).filter(l=>l.notified).length;
+const MAP_CENTER = '18 Walter Street, Paddington NSW 2021';
+// pixel offsets from the map centre (Google embed, zoom 19, centred on 18 Walter St) — matched to the house numbers on the map; production would use GIS parcel centroids
+const DOT_POS = {'182W':[15,-47],'184W':[10,-31],'186W':[5,-16],'188W':[0,0],'190W':[-5,15],'192W':[-10,31],'194W':[-15,46],'183W':[-153,-11],'185W':[-157,3],'187W':[-160,17],'189W':[-166,31],'191W':[-168,45]};
 const MAP_LABELS = { street:'WALTER STREET', rear:'JERSEY RD (REAR)' };
 
 const SUBS = [
- {id:'S-01', rec:'22 Oct 2026, 7:41 PM', ord:1, ch:'Planning Portal', name:'R. Okafor', lot:'186W', role:'Community', relClaim:'Side boundary (north)', relVal:{by:'SR', at:'23 Oct 2026', src:'Rating record — owner match'},
-  aud:'notified', timing:'in', stance:'Object', stanceSrc:'inferred', conf:0.95, confirmed:true, include:null, disclosure:'No reportable donations', ack:'Sent 23 Oct', withheld:false,
-  text:['I own 186 Walter Street, which adjoins the site to the north. I object to the application in its current form.',
-   'The new first-floor bedroom windows on the northern side {{I-06|look directly into our kitchen, living room and rear courtyard. There is no screening shown and the windows are full height}}.',
+ {id:'S-01', considered:true, rec:'22 Oct 2026, 7:41 PM', ord:1, ch:'Council form', name:'R. Okafor', lot:'186W', role:'Community', relClaim:'Side boundary (north)', relVal:{by:'SR', at:'23 Oct 2026', src:'Rating record — owner match'},
+  aud:'notified', timing:'in', stance:'Object', stanceSrc:'declared', conf:null, confirmed:true, include:null, disclosure:'No reportable donations', ack:'Sent 23 Oct', withheld:false,
+  text:['I own 16 Walter Street, which adjoins the site to the north. I object to the application in its current form.',
+   'The new first-floor bedroom windows on the northern side {{I-06|look directly into our kitchen, our children\'s bedroom and rear courtyard. There is no screening shown and the windows are full height}}.',
    '{{I-09|The house is higher than the 9.5 metre limit and the extra height adds to the bulk next to our terrace}}.',
    'We also ask that {{I-14|a dilapidation report is done before excavation for the pool because our terrace shares a party wall footing}}.']},
- {id:'S-02', rec:'24 Oct 2026, 9:15 AM', ord:2, ch:'Council form', name:'J. Whitfield', lot:'190W', role:'Community', relClaim:'Side boundary (south)', relVal:null,
+ {id:'S-02', considered:true, rec:'24 Oct 2026, 9:15 AM', ord:2, ch:'Council form', name:'J. Whitfield', lot:'190W', role:'Community', relClaim:'Side boundary (south)', relVal:null,
   aud:'notified', timing:'in', stance:'Object', stanceSrc:'declared', conf:null, confirmed:true, include:null, disclosure:'No reportable donations', ack:'Sent 24 Oct', withheld:false,
-  text:['We live directly south of the site at 190 Walter Street.',
+  text:['We live directly south of the site at 20 Walter Street.',
    '{{I-07|The shadow diagrams show our rear yard in shadow from 10am to 2pm on 21 June. This is our only private open space}}.',
    '{{I-09|The height variation adds a full storey of wall along our boundary and will dominate our house}}.']},
- {id:'S-03', rec:'28 Oct 2026, 4:02 PM', ord:3, ch:'Email', name:'M. Castellano', lot:'183W', role:'Community', relClaim:'Opposite', relVal:{by:'SYS', at:'28 Oct 2026', src:'GIS — address match'},
-  aud:'notified', timing:'in', stance:'Object', stanceSrc:'inferred', conf:0.88, confirmed:false, include:null, disclosure:'Not provided', ack:'Sent 29 Oct', withheld:false,
+ {id:'S-03', considered:false, rec:'28 Oct 2026 (letter, scanned 29 Oct)', ord:3, ch:'Post', name:'M. Castellano', lot:'183W', role:'Community', relClaim:'Opposite', relVal:{by:'SYS', at:'29 Oct 2026', src:'GIS — address match'},
+  aud:'notified', timing:'in', stance:'Object', stanceSrc:'inferred', conf:0.88, confirmed:false, include:null, disclosure:'Not provided', ack:'Sent 30 Oct', withheld:false,
   text:['As a resident of Walter Street for 22 years I am concerned about this proposal.',
    '{{I-10|The new roof and the flat rendered front do not fit the terrace character of the Paddington conservation area}}.',
    'I am also worried that {{I-13|this will bring down the value of the houses opposite}}.']},
- {id:'S-04', rec:'20 Oct 2026, 12:30 PM', ord:4, ch:'Council form', name:'A. Nguyen', lot:'185W', role:'Community', relClaim:'Opposite', relVal:{by:'SYS', at:'20 Oct 2026', src:'GIS — address match'},
+ {id:'S-04', considered:true, rec:'20 Oct 2026, 12:30 PM', ord:4, ch:'Council form', name:'A. Nguyen', lot:'185W', role:'Community', relClaim:'Opposite', relVal:{by:'SYS', at:'20 Oct 2026', src:'GIS — address match'},
   aud:'notified', timing:'in', stance:'Support', stanceSrc:'declared', conf:null, confirmed:true, include:null, disclosure:'No reportable donations', ack:'Sent 21 Oct', withheld:false,
   text:['The existing house has been empty for years. A new family home will improve the street. I support the application.']},
- {id:'S-05', rec:'27 Oct 2026 (post, scanned 29 Oct)', ord:5, ch:'Post', name:'D. Ferris', lot:'11J', role:'Community', relClaim:'Rear boundary', relVal:{by:'SYS', at:'29 Oct 2026', src:'GIS — address match'},
+ {id:'S-05', considered:true, rec:'27 Oct 2026 (letter, scanned 29 Oct)', ord:5, ch:'Post', name:'D. Ferris', lot:'192W', role:'Community', relClaim:'Other — two lots south', relVal:{by:'SYS', at:'29 Oct 2026', src:'GIS — address match'},
   aud:'notified', timing:'in', stance:'Object', stanceSrc:'inferred', conf:0.91, confirmed:true, include:null, disclosure:'Not provided', ack:'Sent 30 Oct', withheld:false,
-  text:['I own 11 Jersey Road at the rear of the site.',
-   '{{I-08|The pool pump and filter are shown right on our rear boundary, next to our bedroom}}.',
-   '{{I-15|The raised pool deck will look straight over our back fence into our yard}}.',
+  text:['I own 22 Walter Street, two doors south of the site.',
+   '{{I-08|The pool pump and filter are shown close to our side of the site, near our bedroom}}.',
+   '{{I-15|The raised pool deck will look straight over the fences into our yard}}.',
    '{{I-11|The plans show the Port Jackson fig on the rear boundary being removed. It is the only screening between the properties}}.']},
- {id:'S-06', rec:'29 Oct 2026, 8:47 PM', ord:6, ch:'Planning Portal', name:'K. Brennan', lot:'184W', role:'Community', relClaim:'Other', relVal:{by:'SYS', at:'29 Oct 2026', src:'GIS — address match'},
+ {id:'S-06', considered:false, rec:'29 Oct 2026, 8:47 PM', ord:6, ch:'Planning Portal', name:'K. Brennan', lot:'184W', role:'Community', relClaim:'Other', relVal:{by:'SYS', at:'29 Oct 2026', src:'GIS — address match'},
   aud:'notified', timing:'in', stance:'Support in part', stanceSrc:'inferred', conf:0.79, confirmed:false, include:null, disclosure:'No reportable donations', ack:'Sent 30 Oct', withheld:false,
   text:['I generally support the new house. My concern is the construction period.',
    '{{I-12|Walter Street has very limited parking. Trucks and trades will take all the spaces and start early on weekends}}. Please limit work hours and require a traffic plan.']},
- {id:'S-07', rec:'3 Nov 2026, 11:20 AM', ord:7, ch:'Email', name:'Walter Street Residents Group', lot:null, addrFree:'27 Glenmore Rd, Paddington', role:'Community organisation', relClaim:'Not stated', relVal:null,
-  aud:'outside', timing:'late', stance:'Object', stanceSrc:'inferred', conf:0.86, confirmed:true, include:null, disclosure:'Not provided', ack:'Not sent (late)', withheld:false,
-  text:['Our group represents residents of the Paddington heritage conservation area.',
-   '{{I-10|We object to a roof form and street front that do not respond to the terrace rhythm of Walter Street}}.']},
- {id:'S-08', rec:'29 Oct 2026, 9:58 PM', ord:8, ch:'Planning Portal', name:'T. Okafor', lot:'186W', role:'Community', relClaim:'Side boundary (north)', relVal:{by:'SR', at:'30 Oct 2026', src:'Rating record — occupier'},
-  aud:'notified', timing:'in', stance:'Object', stanceSrc:'inferred', conf:0.93, confirmed:true, include:null, disclosure:'No reportable donations', ack:'Sent 30 Oct', withheld:false,
-  text:['I live at 186 Walter Street with my partner, who has also made a submission.',
-   '{{I-06|Our children\'s bedroom faces the site and the proposed windows will look straight into it}}. We ask for frosted glass or high windows.']},
- {id:'S-09', rec:'26 Oct 2026, 6:10 PM', ord:9, ch:'Council form', name:'L. Haddad', lot:'192W', unitNote:'Lot 2', role:'Community', relClaim:'Other — two lots south', relVal:{by:'SYS', at:'26 Oct 2026', src:'GIS — address match'},
-  aud:'missed', timing:'in', stance:'Object', stanceSrc:'declared', conf:null, confirmed:true, include:null, disclosure:'No reportable donations', ack:'Sent 27 Oct', withheld:true,
-  text:['I did not receive a letter about this application and found out from a neighbour.',
-   '{{I-07|Our courtyard already loses sun in winter and the new two-storey wall will make this worse}}. {{I-08|We are also worried about pool pump noise at night}}.']},
- {id:'S-10', rec:'5 Nov 2026, 3:33 PM', ord:10, ch:'Email', name:'Studio Rennick (applicant\'s architect)', lot:'188W', role:'Applicant / agent', relClaim:'Applicant', relVal:{by:'SYS', at:'5 Nov 2026', src:'Matches applicant record'},
-  aud:'applicant', timing:'late', stance:'n/a', stanceSrc:'declared', conf:null, confirmed:true, include:null, disclosure:'n/a', ack:'n/a', withheld:false,
-  attach:'Supplementary shadow diagrams.pdf (informal — not part of the plan set)',
-  text:['We note the neighbours\' concerns about overshadowing. Please find attached supplementary shadow diagrams at hourly intervals for 21 June.',
-   'Any amended plans will be lodged through the NSW Planning Portal.']}
+ {id:'S-07', considered:false, rec:'3 Nov 2026, 11:20 AM', ord:7, ch:'Council form', name:'Walter Street Residents Group', lot:null, addrFree:'27 Glenmore Rd, Paddington', role:'Community organisation', relClaim:'Not stated', relVal:null,
+  aud:'outside', timing:'late', stance:'Support in part', stanceSrc:'declared', conf:null, confirmed:true, include:null, disclosure:'Not provided', ack:'Not sent (late)', withheld:false,
+  text:['Our group represents residents of the Paddington heritage conservation area. We support a new family home on this site.',
+   'However, {{I-10|the roof form and street front should respond to the terrace rhythm of Walter Street}}.']},
+ {id:'S-08', considered:false, rec:'26 Oct 2026, 6:10 PM', ord:8, ch:'Council form', name:'L. Haddad', lot:'194W', role:'Community', relClaim:'Other — three lots south', relVal:{by:'SYS', at:'26 Oct 2026', src:'GIS — address match'},
+  aud:'missed', timing:'in', stance:'Support', stanceSrc:'declared', conf:null, confirmed:true, include:null, disclosure:'No reportable donations', ack:'Sent 27 Oct', withheld:true,
+  text:['We bought this house in September and did not receive a letter about this application. A neighbour told us about it.',
+   'I have looked at the plans and support the new house.']},
+ {id:'S-03.1', dupOf:'S-03', considered:false, rec:'29 Oct 2026 (letter, scanned 30 Oct)', ord:3.1, ch:'Post', name:'P. Lim', lot:'187W', role:'Community', relClaim:'Opposite', relVal:{by:'SYS', at:'30 Oct 2026', src:'GIS — address match'},
+  aud:'notified', timing:'in', stance:'Object', stanceSrc:'inferred', conf:0.88, confirmed:false, include:null, disclosure:'Not provided', ack:'Sent 31 Oct', withheld:false, text:null},
+ {id:'S-03.2', dupOf:'S-03', considered:false, rec:'30 Oct 2026 (letter, scanned 31 Oct)', ord:3.2, ch:'Post', name:'S. Rao', lot:'189W', role:'Community', relClaim:'Opposite', relVal:{by:'SYS', at:'31 Oct 2026', src:'GIS — address match'},
+  aud:'notified', timing:'in', stance:'Object', stanceSrc:'inferred', conf:0.88, confirmed:false, include:null, disclosure:'Not provided', ack:'Sent 31 Oct', withheld:false, text:null}
 ];
+
+SUBS.filter(x=>x.dupOf).forEach(x=>{ x.text = SUBS.find(p=>p.id===x.dupOf).text; });
 
 // rfi: rounds the issue has appeared in; next = flagged for the next RFI letter
 const ISSUES = [
@@ -448,22 +491,22 @@ const ISSUES = [
   sources:[{k:'checklist', ref:'DCP C1 — landscaped area', note:'Deep soil 28% of site (35% required).'}],
   rfi:{rounds:['Round 1','Round 2'], next:false}, rfiText:'Increase deep soil landscaped area to at least 35% of the site.',
   report:{include:true, section:'s 4.15(1)(a)(iii) DCP'}, reportText:'', comments:[], audit:[]},
- {id:'I-06', title:'Overlooking of 186 Walter St from first-floor windows', stage:'Notification & submissions', cat:'Built environment', theme:'Visual privacy', control:'DCP C1 — visual privacy', rel:'Planning', impact:'Significant',
+ {id:'I-06', title:'Overlooking of 16 Walter St from first-floor windows', stage:'Notification & submissions', cat:'Built environment', theme:'Visual privacy', control:'DCP C1 — visual privacy', rel:'Planning', impact:'Significant',
   status:'Open', openedBy:'SR', openedAt:'23 Oct 2026, 10:04 AM', closedBy:null, closedAt:null, closure:null,
-  sources:[{k:'submission', ref:'S-01'},{k:'submission', ref:'S-08'},{k:'sitevisit', ref:'Site visit 28 Oct 2026', note:'Sightline from W04/W05 confirmed into kitchen, bedroom and courtyard of No. 186.'},{k:'tlmeeting', ref:'Team leader meeting 30 Oct 2026', note:'Agreed outcome recorded.'}],
-  rfi:{rounds:['Round 2'], next:false}, rfiText:'Windows W04 and W05 on the northern elevation allow direct overlooking of 186 Walter Street. Provide sill heights of at least 1.6 m above floor level or fixed obscure glazing to 1.6 m.',
+  sources:[{k:'submission', ref:'S-01'},{k:'sitevisit', ref:'Site visit 28 Oct 2026', note:'Sightline from W04/W05 confirmed into kitchen, bedroom and courtyard of No. 16.'},{k:'tlmeeting', ref:'Team leader meeting 30 Oct 2026', note:'Agreed outcome recorded.'}],
+  rfi:{rounds:['Round 2'], next:false}, rfiText:'Windows W04 and W05 on the northern elevation allow direct overlooking of 16 Walter Street. Provide sill heights of at least 1.6 m above floor level or fixed obscure glazing to 1.6 m.',
   report:{include:true, section:'s 4.15(1)(b) · s 4.15(1)(d) Submissions'}, reportText:'',
-  comments:[{by:'SR', at:'28 Oct 2026, 2:15 PM', type:'Site visit', text:'Viewed from the rear of No. 186. W04 and W05 look straight into the kitchen and the children\'s bedroom.'},
+  comments:[{by:'SR', at:'28 Oct 2026, 2:15 PM', type:'Site visit', text:'Viewed from the rear of No. 16. W04 and W05 look straight into the kitchen and the children\'s bedroom.'},
    {by:'MG', at:'30 Oct 2026, 11:40 AM', type:'Agreed outcome', text:'TL meeting: W04 and W05 need 1.6 m sills or fixed obscure glazing to 1.6 m. Include in Round 2.'}], audit:[]},
- {id:'I-07', title:'Overshadowing of rear yards — 190 and 192 Walter St', stage:'Notification & submissions', cat:'Built environment', theme:'Overshadowing and solar access', control:'DCP C1 — solar access', rel:'Planning', impact:'Significant',
+ {id:'I-07', title:'Overshadowing of rear yard — 20 Walter St', stage:'Notification & submissions', cat:'Built environment', theme:'Overshadowing and solar access', control:'DCP C1 — solar access', rel:'Planning', impact:'Significant',
   status:'Open', openedBy:'SR', openedAt:'24 Oct 2026, 11:22 AM', closedBy:null, closedAt:null, closure:null,
-  sources:[{k:'submission', ref:'S-02'},{k:'submission', ref:'S-09'}],
-  rfi:{rounds:['Round 2'], next:false}, rfiText:'Provide hourly shadow diagrams (9 am–3 pm, 21 June) showing existing and proposed shadows on the private open space of 190 and 192 Walter Street.',
+  sources:[{k:'submission', ref:'S-02'}],
+  rfi:{rounds:['Round 2'], next:false}, rfiText:'Provide hourly shadow diagrams (9 am–3 pm, 21 June) showing existing and proposed shadows on the private open space of 20 Walter Street.',
   report:{include:true, section:'s 4.15(1)(b) · s 4.15(1)(d) Submissions'}, reportText:'',
-  comments:[{by:'SR', at:'6 Nov 2026, 9:05 AM', type:'Note', text:'Applicant\'s architect emailed shadow diagrams (S-10). Informal — not part of the plan set. Formal diagrams requested in Round 2.'}], audit:[]},
- {id:'I-08', title:'Pool equipment noise near rear boundaries', stage:'Notification & submissions', cat:'Built environment', theme:'Noise, vibration and construction', control:'DCP — swimming pools', rel:'Planning', impact:'Minor',
+  comments:[{by:'SR', at:'6 Nov 2026, 9:05 AM', type:'Note', text:'Lodged shadow diagrams do not show the rear yard of No. 20 hourly. Formal diagrams requested in Round 2.'}], audit:[]},
+ {id:'I-08', title:'Pool equipment noise near neighbours', stage:'Notification & submissions', cat:'Built environment', theme:'Noise, vibration and construction', control:'DCP — swimming pools', rel:'Planning', impact:'Minor',
   status:'Open', openedBy:'SR', openedAt:'29 Oct 2026, 2:40 PM', closedBy:null, closedAt:null, closure:null,
-  sources:[{k:'submission', ref:'S-05'},{k:'submission', ref:'S-09'}],
+  sources:[{k:'submission', ref:'S-05'}],
   rfi:{rounds:['Round 2'], next:false}, rfiText:'Relocate the pool pump and filter away from the rear boundary or provide an acoustic enclosure.',
   report:{include:true, section:'s 4.15(1)(d) Submissions'}, reportText:'', comments:[], audit:[]},
  {id:'I-09', title:'Height exceeds 9.5 m standard (cl 4.6, +6.3%)', stage:'Lodgement', cat:'Built environment', theme:'Visual bulk and scale', control:'LEP cl 4.3 / cl 4.6', rel:'Planning', impact:'Significant',
@@ -488,15 +531,16 @@ const ISSUES = [
   status:'Closed', openedBy:'SR', openedAt:'29 Oct 2026, 4:30 PM', closedBy:'SR', closedAt:'6 Nov 2026, 9:22 AM', closure:{type:'Not a planning matter', note:'Property values are not a matter for consideration under s 4.15.', ref:''},
   sources:[{k:'submission', ref:'S-03'}], rfi:{rounds:[], next:false}, rfiText:'', report:{include:true, section:'s 4.15(1)(d) Submissions'}, reportText:'Property values are not a matter for consideration under s 4.15 of the EP&A Act.', comments:[], audit:[]},
  {id:'I-14', title:'Damage to adjoining terrace during excavation', stage:'Notification & submissions', cat:'Built environment', theme:'Contamination, soil and geotechnical', control:'Standard conditions', rel:'Planning', impact:'Minor',
-  status:'Closed', openedBy:'SR', openedAt:'23 Oct 2026, 10:06 AM', closedBy:'SR', closedAt:'6 Nov 2026, 9:25 AM', closure:{type:'Condition', note:'Pre- and post-construction dilapidation reports for 186 and 190 Walter St.', ref:'C-08'},
+  status:'Closed', openedBy:'SR', openedAt:'23 Oct 2026, 10:06 AM', closedBy:'SR', closedAt:'6 Nov 2026, 9:25 AM', closure:{type:'Condition', note:'Pre- and post-construction dilapidation reports for 186 and 20 Walter St.', ref:'C-08'},
   sources:[{k:'submission', ref:'S-01'}], rfi:{rounds:[], next:false}, rfiText:'', report:{include:true, section:'s 4.15(1)(d) Submissions'}, reportText:'Dilapidation reports required by condition C-08.', comments:[], audit:[]},
- {id:'I-15', title:'Overlooking from raised pool deck to 11 Jersey Rd', stage:'Notification & submissions', cat:'Built environment', theme:'Visual privacy', control:'DCP C1 — visual privacy', rel:'Planning', impact:'Minor',
+ {id:'I-15', title:'Overlooking from raised pool deck to 22 Walter St', stage:'Notification & submissions', cat:'Built environment', theme:'Visual privacy', control:'DCP C1 — visual privacy', rel:'Planning', impact:'Minor',
   status:'Open', openedBy:'SR', openedAt:'29 Oct 2026, 2:46 PM', closedBy:null, closedAt:null, closure:null,
   sources:[{k:'submission', ref:'S-05'},{k:'tlmeeting', ref:'Team leader meeting 13 Nov 2026', note:'Agreed outcome recorded.'}],
   rfi:{rounds:[], next:false}, rfiText:'Provide a 1.8 m privacy screen along the eastern edge of the pool deck.',
   report:{include:true, section:'s 4.15(1)(d) Submissions'}, reportText:'',
   comments:[{by:'MG', at:'13 Nov 2026, 11:40 AM', type:'Agreed outcome', text:'TL meeting: require a 1.8 m privacy screen on the eastern edge of the pool deck. Put it in the next RFI.'}], audit:[]}
 ];
+ISSUES.forEach(i=>{ if(!i.desc) i.desc = (i.sources.find(x=>x.note)||{}).note || i.rfiText || i.reportText || ''; });
 ISSUES.forEach(i=>{ i.audit.push({at:i.openedAt, by:i.openedBy, t:`Opened · source: ${i.stage}`}); i.rfi.rounds.forEach(r=>i.audit.push({at:r==='Round 1'?'17 Oct 2026, 10:01 AM':'7 Nov 2026, 2:30 PM', by:'SR', t:`Included in RFI ${r}`})); if(i.status==='Closed') i.audit.push({at:i.closedAt, by:i.closedBy, t:`Closed · ${i.closure.type}`}); });
 
 const RFI_ROUNDS = [ {round:'Round 2', by:'SR', status:'In progress', sent:'7 Nov 2026'}, {round:'Round 1', by:'SR', status:'Closed', sent:'17 Oct 2026'} ];
@@ -514,7 +558,7 @@ const CATS = {
 };
 const SRC_KIND = {
  submission:{l:'Submission', ico:'✉', cls:'c-pur'}, checklist:{l:'Compliance checklist', ico:'☑', cls:'c-neu'}, sitevisit:{l:'Site visit', ico:'⌖', cls:'c-info'},
- referral:{l:'Referral', ico:'⇄', cls:'c-info'}, application:{l:'Application', ico:'▤', cls:'c-neu'}, tlmeeting:{l:'Team leader meeting', ico:'◎', cls:'c-pos'}, officer:{l:'Officer review', ico:'✎', cls:'c-neu'}
+ referral:{l:'Internal referral', ico:'⇄', cls:'c-info'}, application:{l:'Application', ico:'▤', cls:'c-neu'}, tlmeeting:{l:'Team leader meeting', ico:'◎', cls:'c-pos'}, officer:{l:'Officer review', ico:'✎', cls:'c-neu'}
 };
 
 /* ================= HELPERS ================= */
@@ -532,9 +576,9 @@ function log(i, t){ i.audit.push({at:stamp(), by:ME, t}); }
 const STANCE_CLS = {'Object':'c-neg','Support':'c-pos','Support in part':'c-warn','Comment':'c-neu','n/a':'c-neu'};
 const stanceChip = s => `<span class="chip ${STANCE_CLS[s.stance]||'c-neu'}"><span class="dot"></span>${esc(s.stance)}</span>`;
 function stanceSrcChip(s){ if(s.stanceSrc==='declared') return `<span class="tiny faint">declared</span>`; return s.confirmed ? `<span class="tiny faint">AI · confirmed</span>` : `<span class="ai"><span class="glow"></span>AI ${Math.round(s.conf*100)}% · confirm</span>`; }
-const AUD = { notified:['c-pos','Notified'], missed:['c-neg','Not notified · in catchment'], outside:['c-neu','Outside catchment'], applicant:['c-neu','Applicant'] };
+const AUD = { notified:['c-info','Notified'], missed:['c-warn','Community'], outside:['c-warn','Community'], applicant:['c-neu','Applicant'] };
 const audChip = s => `<span class="chip ${AUD[s.aud][0]}">${AUD[s.aud][1]}</span>`;
-function timingChip(s){ if(s.timing==='in') return `<span class="chip c-neu">In period</span>`; let x=`<span class="chip c-warn">Late</span>`; if(s.role==='Applicant / agent') return x; if(s.include===true) x+=` <span class="chip c-pos">Included</span>`; else if(s.include===false) x+=` <span class="chip c-neu">Excluded</span>`; else x+=` <span class="chip c-out">Decision needed</span>`; return x; }
+function timingChip(s){ if(s.timing==='in') return `<span class="chip c-neu">In period</span>`; let x=`<span class="chip c-warn">Late</span>`; if(s.role==='Applicant / agent') return x; if(s.include===true) x+=` <span class="chip c-pos">Included</span>`; else if(s.include===false) x+=` <span class="chip c-neu">Excluded</span>`;  return x; }
 function relCell(s){ if(!s.lot) return `${esc(s.relClaim)} <span class="tiny faint">· no parcel match</span>`; const v = s.relVal ? `<span title="Validated by ${esc(pname(s.relVal.by))} · ${esc(s.relVal.src)}" style="color:var(--positive-text)">✓</span>` : `<span class="chip c-warn" title="Claimed by submitter, not validated">claimed</span>`; return `${esc(s.relClaim)} ${v}`; }
 
 function countInfo(s){
@@ -558,17 +602,20 @@ function countInfoBasic(s){ // eligible ignoring duplicate rule
 const countChip = s => { const c=countInfo(s); return c.c?`<span class="chip c-neg" title="${esc(c.why)}">✓ Counts</span>`: c.p?`<span class="chip c-warn" title="${esc(c.why)}">Pending</span>`: c.dup?`<span class="chip c-neu" title="${esc(c.why)}">Same property</span>`:`<span class="faint small" title="${esc(c.why)}">—</span>`; };
 const objectingProps = () => [...new Set(SUBS.filter(s=>countInfo(s).c).map(propKey))];
 const pendingProps = () => [...new Set(SUBS.filter(s=>countInfo(s).p).map(propKey))].filter(k=>!objectingProps().includes(k));
-const commSubs = () => SUBS.filter(s=>s.role!=='Applicant / agent');
+const commSubs = () => SUBS.filter(s=>s.role!=='Applicant / agent' && !s.dupOf);
+const dupsOf = s => SUBS.filter(x=>x.dupOf===s.id);
+const recDate = s => s.rec.split(/,| \(/)[0];
+const consChip = s => { const c = s.dupOf ? sub(s.dupOf).considered : s.considered; return c?'<span class="chip c-pos">Considered</span>':'<span class="chip c-neu">Not considered</span>'; };
 const subsForIssue = i => i.sources.filter(x=>x.k==='submission').map(x=>sub(x.ref)).filter(Boolean);
-const propsForIssue = i => [...new Set(subsForIssue(i).map(propKey))];
+const propsForIssue = i => [...new Set(subsForIssue(i).flatMap(s=>[s,...dupsOf(s)]).map(propKey))];
 const isSubLed = i => i.sources.some(x=>x.k==='submission');
 const hasAgreed = i => i.comments.some(c=>c.type==='Agreed outcome');
-const issuesForSub = s => ISSUES.filter(i=>i.sources.some(x=>x.k==='submission' && x.ref===s.id));
-function relOf(s){ if(!s.lot) return 'Outside'; const r=(s.relVal?LOTS[s.lot].rel:s.relClaim)||''; if(/Side/.test(r)) return 'Side boundary'; if(/Rear/.test(r)) return 'Rear'; if(/Opposite/.test(r)) return 'Opposite'; if(/Applicant/.test(r)) return 'Applicant'; return 'Other'; }
+const issuesForSub = s => { const id=s.dupOf||s.id; return ISSUES.filter(i=>i.sources.some(x=>x.k==='submission' && x.ref===id)); };
+function relOf(s){ return ({'Side boundary':'Side boundary','Rear boundary':'Rear','Opposite':'Opposite','Nearby':'Other','Outside notification area':'Outside'})[s.rel]||'Other'; }
 function extractFor(s, issueId){ const re=/\{\{(I-\d+)\|([^}]+)\}\}/g; let m, out=[]; s.text.forEach(p=>{ while((m=re.exec(p))) if(m[1]===issueId) out.push(m[2]); }); return out; }
 function renderSubText(s){ return s.text.map(p=>'<p>'+esc(p).replace(/\{\{(I-\d+)\|([^}]+)\}\}/g,(_,id,t)=>`<mark class="ex" onclick="openIssue('${id}')" title="Coded to ${id}: ${esc(iss(id)?iss(id).title:'')}">${t}<sup>${id}</sup></mark>`)+'</p>').join(''); }
 const impactChip = v => v==='Significant'?`<span class="chip c-neg">Significant</span>`: v==='Minor'?`<span class="chip c-warn">Minor</span>`:`<span class="chip c-neu">None</span>`;
-const statusChip = i => i.status==='Open'?`<span class="chip c-info"><span class="dot"></span>Open</span>`:`<span class="chip c-pos"><span class="dot"></span>Closed</span>`;
+const statusChip_old = i => i.status==='Open'?`<span class="chip c-info"><span class="dot"></span>Open</span>`:`<span class="chip c-pos"><span class="dot"></span>Closed</span>`;
 function srcChips(i){ const g={}; i.sources.forEach(x=>{g[x.k]=(g[x.k]||0)+1}); return Object.entries(g).map(([k,n])=>`<span class="chip ${SRC_KIND[k].cls}" title="${SRC_KIND[k].l}">${SRC_KIND[k].ico} ${SRC_KIND[k].l}${n>1?' ×'+n:''}</span>`).join(' '); }
 const rfiIssues = () => ISSUES.filter(i=>i.rfi.next);
 const inRound = r => ISSUES.filter(i=>i.rfi.rounds.includes(r));
@@ -598,7 +645,7 @@ const critChip = r => r==='Met'?`<span class="chip c-neg"><span class="dot"></sp
 function routing(){ const cs=criteria(); if(cs.some(c=>c.result==='Met')) return ['c-neg','Local Planning Panel']; if(cs.some(c=>c.result==='Watch')) return ['c-warn','Delegated · panel criteria on watch']; return ['c-pos','Delegated']; }
 
 /* ================= ROUTER ================= */
-const state = { rfiRound:null, view:'overview', ctab:'subs', sfilter:'all', ifilter:'all', igroup:'none', lotFilter:null };
+const state = { rfiRound:null, view:'overview', ctab:'notif', sfilter:'all', ifilter:'all', igroup:'none', lotFilter:null };
 function go(v, opts={}){ Object.assign(state, {view:v}, opts); closeAll(); render(); window.scrollTo(0,0); }
 function render(){ const p=$('page'); p.innerHTML = ({overview:vOverview, community:vCommunity, issues:vIssues, rfi:vRfi, report:vReport})[state.view](); }
 
@@ -625,7 +672,7 @@ function opanel(title, opts, body, foot){
   return `<div class="op ${opts.isNew?'op-new':''}"><div class="op-h"><div class="op-t">${title}${opts.isNew?' <span class="new-chip">New</span>':''}</div><div class="row">${opts.action||''}<span class="op-chev">︿</span></div></div>
     <div class="op-b">${body}</div>${foot?`<div class="op-f">${foot}</div>`:''}</div>`;
 }
-function subsNeedingReview(){ return SUBS.filter(s=>s.aud==='missed'||(!s.confirmed)||(s.timing==='late'&&s.include===null&&s.role!=='Applicant / agent')||(!s.relVal&&s.lot)); }
+function subsNeedingReview(){ return commSubs().filter(s=>!s.considered); }
 function parcelMap(){
   // stylised version of the product's map preview
   let s=`<svg viewBox="0 0 300 230" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><rect width="300" height="230" fill="#f6c7c4"/><g transform="rotate(-40 150 115)" stroke="#e7a3a0" stroke-width=".7" fill="none">`;
@@ -634,11 +681,13 @@ function parcelMap(){
   s+=`<g transform="rotate(-40 150 128)"><rect x="138" y="112" width="26" height="34" fill="none" stroke="#f5c400" stroke-width="2" stroke-dasharray="4 3"/></g><rect x="139" y="118" width="22" height="16" rx="3" fill="white" opacity=".9"/><text x="150" y="130" text-anchor="middle" font-size="10" font-family="Inter" fill="#333">R2</text></svg>`;
   return s;
 }
+function exChip(r){ const st = (!r.required || r.status==='Not started' || r.status==='Draft') ? ['c-neu','Not notified'] : r.status==='Exhibited' ? ['c-info','Publicly exhibited'] : ['c-neu','Exhibition ended']; return `<span class="chip ${st[0]}">${st[1]}</span>`; }
+function exDays(r){ if(r.status!=='Exhibited'||!r.required) return ''; if(TODAY < r.start) return `<span class="small muted">Starts ${fd(r.start,false)}</span>`; const n=Math.round((pd(rEnd(r))-pd(TODAY))/86400000); return `<span class="small" style="color:var(--info-text);font-weight:600">${n} day${n===1?'':'s'} left</span>`; }
 function vOverview(){
   const cs = commSubs(), props=[...new Set(cs.map(propKey))];
   const st = k => cs.filter(s=>s.stance===k).length;
   const pct = n => (n/cs.length*100).toFixed(1)+'%';
-  const rt = routing(); const review = subsNeedingReview().length;
+  const review = subsNeedingReview().length; const nr=curRound();
   const closedN = ISSUES.filter(i=>i.status==='Closed').length;
   const grp = { 'Assessment':['Lodgement','Preliminary review','Site visit','Assessment','Team leader review'], 'Submissions':['Notification & submissions'], 'Referrals':['Referral','Panel'] };
   const gRow = g => { const is=ISSUES.filter(i=>grp[g].includes(i.stage)); return `<tr><td>${g}</td><td style="text-align:center">${is.filter(i=>i.status==='Open').length}</td><td style="text-align:center">${is.filter(i=>i.status==='Closed').length}</td></tr>`; };
@@ -668,8 +717,7 @@ function vOverview(){
   </div>
 
   <div class="ogrid">
-    ${opanel('Compliance checklist',{}, `<div class="small muted mb12">Use a checklist to assess this application against compliance requirements</div>
-      <div class="between small mb8"><b>Progress</b><span class="muted">17 of 21 completed</span></div>
+    ${opanel('Compliance checklist',{}, `      <div class="between small mb8"><b>Progress</b><span class="muted">17 of 21 completed</span></div>
       <div class="segbar"><span style="flex:8;background:#d9f2dc;border-color:#9fd3a6"></span><span style="flex:1.2;background:#fbe3ea;border-color:#e9a9bb"></span><span style="flex:2.5;background:#fff6c9;border-color:#e3cf76"></span><span style="flex:1;background:#e5e0fb;border-color:#b6a9ee"></span><span style="flex:1.1;background:#ececec;border-color:#bdbdbd"></span><span style="flex:3.2;background:#e6f2fd;border-color:#95c3ea"></span></div>
       <div class="small mt16"><span style="color:var(--positive)">●</span> Checklist created</div>`, `<button class="btn">View checklist</button>`)}
     ${opanel('Referrals (6)',{action:'<button class="btn small">➤ Refer</button>'}, `<table class="dtable mini-table"><tr><th>Team</th><th>Assigned</th><th>Age</th><th>Status</th></tr>
@@ -680,18 +728,18 @@ function vOverview(){
     ${opanel('Portal documents (9)',{action:'<span class="op-chev">⟳</span>'}, ['DA Checklist for Applicant.pdf','Structural Design Drawings.pdf','Generic Arboricultural Impact Assessment.pdf','BASIX Form.pdf','Waste Management Plan Example.pdf'].map(d=>`<div class="docrow"><span style="color:#d9534f">▣</span> ${d}</div>`).join(''), `<button class="btn">View all documents</button>`)}
 
     ${opanel('Community views',{isNew:true}, `
-      ${kvr('Exhibition', `${NOTIF.start.replace(' 2026','')} – ${NOTIF.end} <span class="chip c-neu">Closed</span>`)}
-      ${kvr('Submissions', `<b>${cs.length}</b> from ${props.length} properties`)}
-      <div class="sbar mt8"><span style="width:${pct(st('Object'))};background:#ff8a84"></span><span style="width:${pct(st('Support in part'))};background:#ffc266"></span><span style="width:${pct(st('Support'))};background:#7dd693"></span></div>
-      <div class="legend" style="margin-bottom:10px"><span><i style="background:#ff8a84"></i>${st('Object')} object</span><span><i style="background:#ffc266"></i>${st('Support in part')} in part</span><span><i style="background:#7dd693"></i>${st('Support')} support</span></div>
-      ${kvr('Determining authority', `<span class="chip ${rt[0]}">${rt[1].split(' · ')[0]}</span>`)}
-      ${review?`<div class="small mt12"><a onclick="go('community',{ctab:'subs',sfilter:'attention'})" style="color:var(--warning-text)"><span style="color:var(--warning)">●</span> ${review} submission${review>1?'s':''} need${review>1?'':'s'} review</a></div>`:''}`,
-      `<button class="btn" onclick="go('community',{ctab:'subs',sfilter:'all'})">View community views</button>`)}
+      <div class="row mb8">${exChip(nr)}${exDays(nr)}</div>
+      <div class="segbar"><span style="flex:${st('Object')||0.001};background:#fde2e0;border-color:#f0a19b" title="Object: ${st('Object')} submission${st('Object')===1?'':'s'}"></span><span style="flex:${st('Support in part')||0.001};background:#fff6c9;border-color:#e3cf76" title="Support in part: ${st('Support in part')} submission${st('Support in part')===1?'':'s'}"></span><span style="flex:${st('Support')||0.001};background:#d9f2dc;border-color:#9fd3a6" title="Support: ${st('Support')} submission${st('Support')===1?'':'s'}"></span></div>
+      <div style="height:12px"></div>
+      ${kvr('Notified', `${nr.start&&nr.required?fd(nr.start,false)+' – '+fd(rEnd(nr)):'—'}`)}
+      ${kvr('Submissions', `<b>${cs.length}</b>`)}
+      ${review?`<div class="small mt12"><a onclick="go('community',{ctab:'subs',sfilter:'attention'})" style="color:var(--warning-text)"><span style="color:var(--warning)">●</span> ${review} submission${review>1?'s':''} pending review</a></div>`:''}`,
+      `<button class="btn" onclick="go('community',{ctab:'notif',sfilter:'all'})">All community views</button>`)}
     ${opanel(`Issues (${ISSUES.length})`,{isNew:true, action:'<button class="btn small" onclick="openAddIssue()">＋ Add issue</button>'}, `
       <div class="between small mb8"><b>Progress</b><span class="muted">${closedN} of ${ISSUES.length} closed</span></div>
-      <div class="segbar"><span style="flex:${closedN||0.001};background:#d9f2dc;border-color:#9fd3a6" title="Closed"></span><span style="flex:${sigOpen||0.001};background:#fde2e0;border-color:#f0a19b" title="Open — significant"></span><span style="flex:${minOpen||0.001};background:#fff6c9;border-color:#e3cf76" title="Open — minor"></span></div>
+      <div class="segbar"><span style="flex:${closedN||0.001};background:#d9f2dc;border-color:#9fd3a6" title="Closed: ${closedN} issue${closedN===1?'':'s'}"></span><span style="flex:${sigOpen||0.001};background:#fde2e0;border-color:#f0a19b" title="Not closed — significant impact: ${sigOpen} issue${sigOpen===1?'':'s'}"></span><span style="flex:${minOpen||0.001};background:#fff6c9;border-color:#e3cf76" title="Not closed — minor or no impact: ${minOpen} issue${minOpen===1?'':'s'}"></span></div>
       <table class="dtable mini-table mt12"><tr><th>Raised in</th><th style="text-align:center">Open</th><th style="text-align:center">Closed</th></tr>${gRow('Assessment')}${gRow('Submissions')}${gRow('Referrals')}</table>
-      ${ap.length?`<div class="small mt12"><a onclick="openIssue('${ap[0].id}')" style="color:var(--warning-text)"><span style="color:var(--warning)">●</span> ${ap.length} agreed outcome${ap.length>1?'s':''} not in an RFI</a></div>`:''}`,
+      `,
       `<button class="btn" onclick="go('issues',{ifilter:'all'})">View all issues</button>`)}
     ${opanel(`RFI letters (${rfiRows.length})`,{action:'<button class="btn small" onclick="go(\'issues\',{ifilter:\'open\'})">＋ Add issue</button>'}, `<table class="dtable mini-table"><tr><th>Round</th><th>Sent by</th><th>Issues</th><th>Status</th></tr>
       ${rfiRows.map(r=>`<tr class="click" onclick="state.rfiRound='${r.round}';go('rfi')"><td>${r.round}</td><td>${r.by?pname(r.by):'—'}</td><td>${r.n}</td><td>${rStatus(r.status)}</td></tr>`).join('')}</table>`,
@@ -704,124 +752,228 @@ function vOverview(){
 }
 
 
+/* ================= DATES / NOTIFICATION ROUNDS ================= */
+const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const pd = iso => { const [y,m,d]=iso.split('-').map(Number); return new Date(Date.UTC(y,m-1,d)); };
+const iso = dt => dt.toISOString().slice(0,10);
+const fd = (isoStr, yr=true) => { if(!isoStr) return '—'; const d=pd(isoStr); return `${d.getUTCDate()} ${MON[d.getUTCMonth()]}${yr?' '+d.getUTCFullYear():''}`; };
+const excluded = d => { const m=d.getUTCMonth(), dd=d.getUTCDate(); return (m===11&&dd>=20)||(m===0&&dd<=10); };
+function endDate(startIso, days){ let d=pd(startIso), n=0; while(n<days){ d=new Date(d.getTime()+86400000); if(!excluded(d)) n++; } return iso(d); }
+const TODAY = '2026-11-16';
+const curRound = () => NOTIF.rounds[NOTIF.rounds.length-1];
+const rEnd = r => r.start ? endDate(r.start, r.period) : null;
+const N_STATUS = ['Not started','Draft','Exhibited','Closed'];
+const nChip = st => ({'Not started':'c-neu','Draft':'c-warn','Exhibited':'c-info','Closed':'c-neu'})[st];
+const METHODS = [['letters','Letters to owners & occupiers'],['site','Site notice'],['web','Council website / DA tracker'],['portal','NSW Planning Portal exhibition']];
+const PERIODS = [14,21,28,30];
+
+/* ================= MAP (Google Maps embed + dots) ================= */
+function gMap(){
+  const dot = (k, cls, tip) => { const p=DOT_POS[k]; if(!p) return ''; return `<span class="gdot ${cls}" style="left:calc(50% + ${p[0]}px);top:calc(50% + ${p[1]}px)" title="${esc(tip)}"></span>`; };
+  let dots='';
+  Object.entries(LOTS).forEach(([k,l])=>{
+    if(l.subject) return; // Google's pin marks the site
+    const ss = SUBS.filter(s=>s.lot===k);
+    if(ss.length){ const st=ss.map(s=>s.stance); const cls = st.includes('Object')?'obj':st.includes('Support in part')?'part':'sup';
+      dots+=dot(k, cls+(ss.some(s=>s.aud==='missed')?' qa':''), `${l.addr} — ${ss.map(s=>s.id+' '+s.stance).join(', ')}${ss.some(s=>s.aud==='missed')?' (not notified)':''}`); }
+    else if(l.notified) dots+=dot(k,'notified',`${l.addr} — notified, no submission`);
+  });
+  const q=encodeURIComponent(MAP_CENTER);
+  return `<div class="gmap"><div class="gmap-fallback">Google Maps loads here when the file is opened in a web browser.<br><a href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank" rel="noopener" style="pointer-events:auto">Open ${esc(MAP_CENTER)} in Google Maps ↗</a></div><iframe title="Map of ${esc(MAP_CENTER)}" referrerpolicy="no-referrer-when-downgrade" allowfullscreen src="https://www.google.com/maps?q=${q}&z=19&t=m&output=embed"></iframe>${dots}</div>
+  <div class="small mt8" style="text-align:right"><a href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank" rel="noopener">Open in Google Maps ↗</a></div>`;
+}
+
 /* ================= COMMUNITY VIEWS ================= */
 function vCommunity(){
-  const cs=commSubs();
-  const tabs = [['subs',`Submissions <span class="cnt">${SUBS.length}</span>`],['notif','Notification'],['panel',`Panel referral <span class="cnt ${routing()[0]==='c-pos'?'':'neg'}">${criteria().filter(c=>c.result!=='Not met').length}</span>`]];
+  const r=curRound(), end=rEnd(r);
+  const tabs = [['notif','Notification'],['subs',`Submissions <span class="cnt" title="${SUBS.length} received · ${SUBS.filter(x=>x.dupOf).length} duplicates counted once">${commSubs().length}</span>`]];
+  const step = (label, date, done, now) => `<div class="tl-step ${done?'done':''} ${now?'now':''}"><div class="tl-dot"></div><b>${label}</b><span>${date}</span></div>`;
+  const past = d => d && d<=TODAY;
   return `
   <div class="crumbs"><a onclick="go('overview')">Applications</a> / <a onclick="go('overview')">${APP.id}</a></div>
-  <div class="page-head"><div><div class="page-title"><button class="back" onclick="go('overview')">←</button>Community views</div><div class="page-sub">${APP.id} · ${esc(APP.address)} · ${APP.desc}</div></div>
-    <div class="head-actions"><button class="btn" onclick="toast('Re-notification wizard — next prototype iteration')">Re-notify</button><button class="btn" onclick="go('report')">Report section</button></div></div>
+  <div class="page-head"><div><div class="page-title"><button class="back" onclick="go('overview')">←</button>Community views</div><div class="page-sub">${APP.id} · ${esc(APP.address)}</div></div></div>
   <div class="card mb16" style="padding:14px 18px">
-    <div class="between"><div class="row"><span class="chip c-ink">Exhibited</span><span class="small muted">${NOTIF.regime} · rule decision confirmed by ${pname(NOTIF.confirmedBy)}</span></div><span class="chip ${routing()[0]}">${routing()[1]}</span></div>
+    <div class="row"><span class="chip ${nChip(r.status)}">${r.status}</span>${NOTIF.rounds.length>1?`<span class="small muted">Notification round ${r.n}</span>`:''}</div>
     <div class="tl">
-      <div class="tl-step done"><div class="tl-dot"></div><b>Lodged</b><span>${APP.lodged.replace(' 2026','')}</span></div>
-      <div class="tl-step done"><div class="tl-dot"></div><b>Letters posted</b><span>15 Oct</span></div>
-      <div class="tl-step done"><div class="tl-dot"></div><b>Exhibition starts</b><span>16 Oct</span></div>
-      <div class="tl-step done"><div class="tl-dot"></div><b>Exhibition closes</b><span>30 Oct · 14 days</span></div>
-      <div class="tl-step now"><div class="tl-dot"></div><b>Today</b><span>16 Nov · late items: ${SUBS.filter(s=>s.timing==='late').length}</span></div>
+      ${step('Lodged', APP.lodged.replace(' 2026',''), true)}
+      ${step('Exhibition starts', r.start?fd(r.start,false):'—', past(r.start)&&r.status!=='Draft')}
+      ${step('Exhibition ends', end?`${fd(end,false)} · ${r.period} days`:'—', r.status==='Closed')}
+      ${step('Today', '16 Nov', false, true)}
     </div>
   </div>
   <div class="tabs">${tabs.map(t=>`<button class="tab ${state.ctab===t[0]?'active':''}" onclick="state.ctab='${t[0]}';render()">${t[1]}</button>`).join('')}</div>
-  ${state.ctab==='subs'?cSubs():state.ctab==='notif'?cNotif():cPanel()}`;
+  ${state.ctab==='notif'?cNotif():cSubs()}`;
 }
+const issueChip = i => `<span class="chip c-pur" style="margin:1px" title="${esc(i.title)}">${i.id}</span>`;
+function stanceCell(s){ const ai = s.stanceSrc==='inferred'; const unconf = ai && !s.confirmed; return `<span class="row" style="gap:5px">${stanceChip(s)}${ai?`<span class="ai-ico ${unconf?'pending':''}" title="${unconf?'Suggested by AI — not yet confirmed':'Suggested by AI — confirmed by officer'}">✦</span>`:''}</span>`; }
 function cSubs(){
-  const F = { all:['All',()=>true], object:['Objections',s=>s.stance==='Object'], late:['Late',s=>s.timing==='late'], attention:['Needs attention',s=>s.aud==='missed'||(!s.confirmed)||(s.timing==='late'&&s.include===null&&s.role!=='Applicant / agent')||(!s.relVal&&s.lot)], counted:['Counted',s=>countInfo(s).c] };
-  let list = SUBS.slice().sort((a,b)=>a.ord-b.ord);
-  if(state.sfilter==='lot') list = list.filter(s=>s.lot===state.lotFilter); else list = list.filter(F[state.sfilter][1]);
-  // cross tab
+  const F = { all:['All',()=>true], object:['Objections',s=>s.stance==='Object'], late:['Late',s=>s.timing==='late'], attention:['Pending review',s=>!s.considered] };
+  if(!F[state.sfilter]) state.sfilter='all';
+  const list = commSubs().sort((a,b)=>a.ord-b.ord).filter(F[state.sfilter][1]);
+  const received = SUBS.length, dups = SUBS.filter(x=>x.dupOf).length;
   const cols=['Side boundary','Rear','Opposite','Other','Outside'];
-  const subIssues = ISSUES.filter(isSubLed);
-  const xt = subIssues.map(i=>{ const ss=subsForIssue(i); const row=cols.map(c=>new Set(ss.filter(s=>relOf(s)===c).map(propKey)).size); return {i,row}; });
+  const xt = ISSUES.filter(isSubLed).map(i=>{ const ss=subsForIssue(i).flatMap(s=>[s,...dupsOf(s)]); return {i, row:cols.map(c=>new Set(ss.filter(s=>relOf(s)===c).map(propKey)).size)}; });
+  const row = (s, child) => `<tr class="click ${child?'duprow':''}" onclick="openSub('${s.id}')"><td class="strong">${child?'<span class="faint">↳</span> ':''}${s.id}</td><td class="small">${esc(recDate(s))}</td><td class="small">${s.ch}</td>
+      <td class="strong" style="color:var(--ink)">${s.withheld?'<span class="chip c-neu" title="Name withheld on publication">Name withheld</span> ':''}${esc(s.name)}</td>
+      <td class="small">${esc(propAddr(s))}</td><td>${audChip(s)}</td><td>${child?'':timingChip(s)}</td><td>${child?`<span class="chip c-out">Duplicate of ${s.dupOf}</span>`:stanceCell(s)}</td>
+      <td class="small">${child?'<span class="faint">counted with '+s.dupOf+'</span>':issuesForSub(s).map(issueChip).join('')||'<span class="faint">—</span>'}</td><td>${child?'':consChip(s)}</td></tr>`;
   return `
-  <div class="between mb12"><div class="filters">${Object.entries(F).map(([k,v])=>`<button class="ftab ${state.sfilter===k?'active':''}" onclick="state.sfilter='${k}';render()">${v[0]}</button>`).join('')}
-    ${state.sfilter==='lot'?`<button class="ftab active" onclick="state.sfilter='all';render()">${esc(LOTS[state.lotFilter].addr)} ✕</button>`:''}</div>
-    <div class="row small muted"><span class="ai"><span class="glow"></span>AI assist</span> classifies stance and codes extracts to issues · every suggestion needs officer confirmation</div></div>
+  <div class="between mb12"><div class="filters">${Object.entries(F).map(([k,v])=>`<button class="ftab ${state.sfilter===k?'active':''}" onclick="state.sfilter='${k}';render()">${v[0]}</button>`).join('')}</div>
+    <div class="row"><span class="row small muted"><span class="ai"><span class="glow"></span>AI assist</span> suggests stance and links extracts to issues · officer confirms</span><button class="btn small" onclick="openAddSub()">＋ Add submission</button></div></div>
+  <div class="small muted mb8"><b style="color:var(--ink)">${commSubs().length} submissions</b> counted from ${received} received · ${dups} identical letters grouped with the original and counted once</div>
   <div class="card mb16" style="overflow:hidden">
-    <table class="dtable"><tr><th>ID</th><th>Received</th><th>Channel</th><th>Submitter</th><th>Property · relationship</th><th>Audience</th><th>Timing</th><th>Stance</th><th>Panel count</th><th>Issues</th></tr>
-    ${list.map(s=>`<tr class="click" onclick="openSub('${s.id}')"><td class="strong">${s.id}</td><td class="small">${esc(s.rec)}</td><td class="small">${s.ch}</td>
-      <td><div class="strong" style="color:var(--ink)">${s.withheld?'<span class="chip c-neu" title="Name withheld on publication">Name withheld</span> ':''}${esc(s.name)}</div><div class="tiny faint">${s.role}</div></td>
-      <td class="small"><div>${esc(propAddr(s))}</div><div class="faint">${relCell(s)}</div></td><td>${audChip(s)}</td><td>${timingChip(s)}</td>
-      <td>${stanceChip(s)}<div>${s.stance==='n/a'?'':stanceSrcChip(s)}</div></td><td>${countChip(s)}</td>
-      <td class="small">${issuesForSub(s).map(i=>`<span class="chip c-pur" style="margin:1px">${i.id}</span>`).join('')||'<span class="faint">—</span>'}</td></tr>`).join('')}
+    <table class="dtable"><tr><th>ID</th><th>Received</th><th>Channel</th><th>Submitter</th><th>Property</th><th>Audience</th><th>Timing</th><th>Stance</th><th>Issues</th><th>Status</th></tr>
+    ${list.map(s=>row(s,false)+dupsOf(s).map(d=>row(d,true)).join('')).join('')}
     </table>
   </div>
-  <div class="grid2">
-    <div class="card" style="padding:14px 16px"><div class="between mb8"><div class="panel-t">Who responded</div><span class="tiny faint">click a coloured lot to filter</span></div>${mapSVG({stance:true})}
-      <div class="legend"><span><i style="background:#ffb3ae"></i>Object</span><span><i style="background:#ffd699"></i>Support in part</span><span><i style="background:#b4e6c0"></i>Support</span><span><i style="background:#f2f2f7;border:1px dashed #8e8e93"></i>Notified, no response</span><span><i style="background:white;border:2px solid #b81d14"></i>Responded but not notified</span></div></div>
-    <div class="card" style="padding:14px 16px"><div class="panel-t mb8">Issues raised, by relationship to the site</div><div class="small muted mb8">Properties raising each submission-led issue. Weight matters more than volume: one side-boundary owner can outweigh several distant objectors.</div>
-      <table class="dtable mini-table"><tr><th>Issue</th>${cols.map(c=>`<th style="text-align:center">${c}</th>`).join('')}</tr>
-      ${xt.map(r=>`<tr class="click" onclick="openIssue('${r.i.id}')"><td class="strong small">${r.i.id} · ${esc(r.i.title.length>44?r.i.title.slice(0,42)+'…':r.i.title)}</td>${r.row.map((n,ix)=>`<td style="text-align:center">${n?`<span class="chip ${ix===0?'c-neg':'c-neu'}">${n}</span>`:'<span class="faint">·</span>'}</td>`).join('')}</tr>`).join('')}</table></div>
-  </div>`;
+  <details class="card mapcard" open><summary class="panel-t">Map view</summary>${gMap()}
+    <div class="legend"><span><span style="color:#ea4335;margin-right:4px">📍</span>Site</span><span><i class="lg obj"></i>Object</span><span><i class="lg part"></i>Support in part</span><span><i class="lg sup"></i>Support</span><span><i class="lg notified"></i>Notified, no submission</span><span><i class="lg qa"></i>Submission, not notified</span></div></details>
+`;
 }
 function cNotif(){
-  return `<div class="grid2">
+  const r=curRound(), ed = r.status==='Not started'||r.status==='Draft', end=rEnd(r);
+  const dis = ed?'':'disabled';
+  const stepper = N_STATUS.map((st,ix)=>{ const cur=N_STATUS.indexOf(r.status)+(r.status==='Closed'?1:0); return `<div class="nstep ${ix<cur?'done':''} ${ix===cur?'cur':''}"><span>${ix<cur?'✓':ix+1}</span>${st}</div>`; }).join('<div class="nline"></div>');
+  const actions = { 'Not started':`<button class="btn primary" onclick="nAct('draft')">Create draft</button>`,
+    'Draft':`<button class="btn" onclick="nAct('save')">Save</button><button class="btn primary" onclick="nAct('exhibit')">Start exhibition</button>`,
+    'Exhibited':`<button class="btn primary" onclick="nAct('close')">Close exhibition</button>`, 'Closed':'' }[r.status];
+  const lettersN = Object.values(LOTS).filter(l=>l.notified).length;
+  return `
+  <div class="nm-wrap">
    <div class="card" style="padding:16px 18px">
-     <div class="between mb12"><div class="panel-t">Exhibition decision</div><span class="chip c-ink">Exhibit · ${NOTIF.minDays} days min</span></div>
-     <dl class="kv"><dt>Regime</dt><dd><b>${NOTIF.regime}</b><div class="small muted">${NOTIF.regimeWhy}</div></dd>
-       <dt>Development types</dt><dd>${NOTIF.devTypes.map(d=>`${d.t} <span class="chip c-neu">Table 6</span>`).join('<br>')}</dd>
-       <dt>cl 4.6 requests</dt><dd>${NOTIF.cl46.map(c=>`${c.std}: ${c.proposed} vs ${c.control} <span class="chip c-warn">+${c.pct}%</span>`).join('')}</dd>
-       <dt>Basis</dt><dd class="small">${NOTIF.basis}</dd><dt>Rule version</dt><dd class="small">${NOTIF.ruleVersion}</dd>
-       <dt>Confirmed</dt><dd class="row">${av(NOTIF.confirmedBy)} <span class="small">${pname(NOTIF.confirmedBy)} · ${NOTIF.confirmedAt}</span></dd></dl>
-     <div class="alert info mt12"><span class="ico">↻</span><div>Re-evaluated automatically on any Portal amendment, new cl 4.6 request or change of description.</div></div>
+    <div class="between mb12"><div class="panel-t">Notice management${NOTIF.rounds.length>1?` · round ${r.n}`:''}</div>
+      <button class="btn" ${r.status==='Closed'?'':'disabled'} title="${r.status==='Closed'?'Start a new notification round':'Available once the current notification is closed'}" onclick="nAct('renotify')">↻ Re-notify</button></div>
+    <div class="nsteps mb16">${stepper}</div>
+    <div class="f2">
+      <div class="field"><label>Notification required</label>
+        <div class="row" style="gap:16px;padding:6px 0"><label class="row small"><input type="radio" name="nreq" ${r.required?'checked':''} ${dis} onchange="curRound().required=true;render()"> Yes</label><label class="row small"><input type="radio" name="nreq" ${!r.required?'checked':''} ${dis} onchange="curRound().required=false;render()"> No</label></div></div>
+      <div class="field"><label>Status</label><div style="padding:6px 0"><span class="chip ${nChip(r.status)}">${r.status}</span></div></div>
+    </div>
+    ${!r.required?`<div class="field"><label>Reason notification is not required</label><textarea ${dis} onblur="curRound().notReason=this.value" placeholder="e.g. Table 6 development with no cl 4.6 height or FSR variation">${esc(r.notReason)}</textarea></div>`:`
+    <div class="f2">
+      <div class="field"><label>Notification period</label><select ${dis} onchange="curRound().period=+this.value;render()">${PERIODS.map(p=>`<option value="${p}" ${r.period===p?'selected':''}>${p} days${p===14?' (minimum)':''}</option>`).join('')}</select></div>
+      <div class="field"><label>Start date</label><input type="date" ${dis} value="${r.start||''}" onchange="curRound().start=this.value;render()"></div>
+    </div>
+    ${r.period>14?`<div class="field"><label>Reason for extended period</label><input ${dis} value="${esc(r.extReason)}" onblur="curRound().extReason=this.value" placeholder="Required when the period is longer than 14 days"></div>`:''}
+    <div class="field"><label>End date</label><div class="small" style="padding:4px 0"><b>${end?fd(end):'—'}</b> <span class="muted">calculated · 20 Dec – 10 Jan not counted</span></div></div>
+    <div class="field"><label>Notification methods</label>
+      ${METHODS.map(([k,l])=>`<label class="row small" style="padding:3px 0"><input type="checkbox" ${r.methods[k]?'checked':''} ${dis} onchange="curRound().methods['${k}']=this.checked"> ${l}${k==='letters'?` <span class="faint">· ${lettersN} properties</span>`:''}</label>`).join('')}</div>`}
+    <div class="row mt8" style="justify-content:flex-end">${actions}</div>
    </div>
-   <div class="card" style="padding:16px 18px">
-     <div class="panel-t mb12">Notice given — evidence</div>
-     <table class="dtable mini-table"><tr><th>Method</th><th>Date</th><th>Evidence</th></tr>${NOTIF.methods.map(m=>`<tr><td class="strong">${m.m}</td><td>${m.d}</td><td class="small">${m.ok?'<span style="color:var(--positive-text)">✓</span> ':''}${m.ev}</td></tr>`).join('')}</table>
-     <div class="small muted mt12">Period start = latest of letters posted, site notice and online notice → <b>16 Oct 2026</b>. Close: <b>30 Oct 2026</b> (no 20 Dec–10 Jan days in period).</div>
-   </div></div>
-   <div class="card mb16" style="padding:16px 18px"><div class="panel-t mb12">Amendments — re-notification decisions</div>
-   ${NOTIF.amendments.map(m=>`<div class="between"><div><b class="small">${m.ref}</b> <span class="small muted">· ${m.date} · ${m.via}</span><div class="small mt8">${m.rule}. <b>${m.decision}</b> — ${esc(m.why)}</div></div><div class="row tiny faint" style="white-space:nowrap">${av(m.by)} ${m.at}</div></div>`).join('')}</div>
-   <div class="card" style="overflow:hidden"><div class="between" style="padding:14px 16px"><div class="panel-t">Recipient list — Round 1 (${RECIPIENT_COUNT} properties)</div><span class="small muted">Source: GIS parcels 25 m + ERP rating owners/occupiers · generated 15 Oct 8:40 AM</span></div>
-   <table class="dtable"><tr><th>Property</th><th>Relationship</th><th>Letters</th><th>Responded</th></tr>
-   ${Object.entries(LOTS).filter(([k,l])=>l.notified).map(([k,l])=>{ const r=SUBS.filter(s=>s.lot===k); return `<tr><td class="strong">${esc(l.addr)}</td><td>${l.rel}</td><td>${l.partial?'<span class="chip c-neg">Lot 1 only — strata not expanded</span>':'Owner + occupier'}</td><td>${r.map(s=>stanceChip(s)+' <span class="tiny faint">'+s.id+'</span>').join(' ')||'<span class="faint">—</span>'}</td></tr>`; }).join('')}
+   <div class="card" style="padding:16px 18px;align-self:start"><div class="panel-t mb12">Notification history</div>
+    ${NOTIF.rounds.slice().reverse().map(x=>`<div class="between" style="padding:8px 0;border-bottom:1px solid var(--border-light)"><div><div class="small strong">Round ${x.n}</div><div class="tiny muted">${x.required?(x.start?`${fd(x.start,false)} – ${fd(rEnd(x))} · ${x.period} days`:'Dates not set'):'Not required'}</div></div><span class="chip ${nChip(x.status)}">${x.status}</span></div>`).join('')}
+   </div>
+  </div>
+  <div class="card mt16" style="overflow:hidden"><div class="between" style="padding:14px 16px"><div class="panel-t">Recipient list (${RECIPIENT_COUNT} properties)</div><button class="btn small" onclick="openAddSub()">＋ Add submission</button></div>
+   <table class="dtable"><tr><th>Property</th><th>External ID</th><th>Relationship</th><th>Letters</th><th>Submission</th><th>Stance</th></tr>
+   ${Object.entries(LOTS).filter(([k,l])=>l.notified).map(([k,l])=>{ const ss=SUBS.filter(s=>s.lot===k); return `<tr><td class="strong">${esc(l.addr)}</td><td class="small" style="font-family:ui-monospace,Menlo,monospace">${l.ext}</td><td>${l.rel}</td><td>${l.returned?'<span class="chip c-warn" title="Rating record lists the previous owner">Returned to sender</span>':'Owner + occupier'}</td>
+     <td>${ss.map(s=>`<a onclick="openSub('${s.id}')">${s.id}</a>`).join(', ')||'<span class="faint">—</span>'}</td><td>${ss.map(stanceChip).join(' ')||'<span class="faint">—</span>'}</td></tr>`; }).join('')}
    </table></div>`;
 }
-function cPanel(){
-  const cs=criteria();
-  const props = [...new Set(SUBS.filter(s=>s.role!=='Applicant / agent' && (s.stance==='Object'||s.stance==='Support in part')).map(propKey))];
-  return `<div class="card mb16" style="padding:14px 18px"><div class="between"><div><div class="panel-t">Rule set: Demo council</div><div class="small muted">LPP Direction defaults + 1 local criterion (example). Configured per council and versioned.</div></div>
-    <div class="row" style="gap:18px"><label class="tgl"><input type="checkbox" ${SETTINGS.inPartCounts?'checked':''} onchange="SETTINGS.inPartCounts=this.checked;render();toast('Counting rule updated — criteria re-evaluated')"><span class="sw"></span>Count “support in part” as an objection</label>
-    <label class="tgl"><input type="checkbox" ${SETTINGS.localSideRule?'checked':''} onchange="SETTINGS.localSideRule=this.checked;render()"><span class="sw"></span>Local side-boundary criterion</label></div></div></div>
-  ${cs.map(c=>`<div class="card mb12" style="padding:14px 18px"><div class="between"><div><div class="panel-t">${c.name} ${c.local?'<span class="chip c-pur">Local</span>':''}</div><div class="small muted">${c.src} · ${c.rule}</div></div>${critChip(c.result)}</div><div class="small mt8">${c.detail}</div></div>`).join('')}
-  <div class="card" style="overflow:hidden"><div style="padding:14px 16px" class="panel-t">Objecting properties</div><table class="dtable"><tr><th>Property</th><th>Relationship</th><th>Submissions</th><th>Status</th></tr>
-  ${props.map(k=>{ const ss=SUBS.filter(s=>propKey(s)===k && s.role!=='Applicant / agent'); const ci=ss.map(countInfo); const c=ci.some(x=>x.c); const p=!c&&ci.some(x=>x.p); return `<tr><td class="strong">${esc(propAddr(ss[0]))}</td><td>${relCell(ss[0])}</td><td>${ss.map(s=>`<a onclick="openSub('${s.id}')">${s.id}</a>`).join(', ')}</td><td>${c?'<span class="chip c-neg">Counted</span>':p?'<span class="chip c-warn" title="'+esc(ci.find(x=>x.p).why)+'">Pending</span>':'<span class="chip c-neu" title="'+esc(ci[0].why)+'">Not counted</span>'} <span class="tiny faint">${esc((ci.find(x=>!x.c&&!x.dup)||{}).why&&!c?ci.find(x=>!x.c&&!x.dup).why:'')}</span></td></tr>`; }).join('')}
-  </table></div>`;
+function nAct(a){
+  const r=curRound();
+  if(a==='draft'){ r.status='Draft'; toast('Notification draft created'); }
+  else if(a==='save'){ toast('Notification saved'); }
+  else if(a==='exhibit'){
+    if(r.required===false){ r.status='Closed'; toast('Recorded: notification not required'); }
+    else { if(!r.start){ toast('Choose a start date'); return; } if(r.period>14 && !r.extReason.trim()){ toast('Give a reason for the extended period'); return; } r.status='Exhibited'; toast(`Exhibition started · ends ${fd(rEnd(r))}`); } }
+  else if(a==='close'){ r.status='Closed'; toast('Exhibition closed'); }
+  else if(a==='renotify'){ if(r.status!=='Closed') return; NOTIF.rounds.push({n:r.n+1, required:true, notReason:'', period:14, extReason:'', start:TODAY, status:'Draft', methods:{letters:true, site:true, web:true, portal:true}, by:ME}); toast(`Notification round ${r.n+1} created as a draft`); }
+  render();
+}
+
+/* ================= ADD SUBMISSION (manual entry, e.g. scanned letter) ================= */
+const SAMPLE_SCAN_TEXT = 'Dear Sir/Madam, I live at 23 Walter Street and wish to comment on DA489831. I am concerned that the pool equipment will be noisy at night and that construction trucks will block the street. I have no objection to a new house on the site.';
+function openAddSub(){
+  const today = TODAY;
+  modal('Add submission', `
+   <div class="f2"><div class="field"><label>Channel</label><select id="as-ch"><option>Post (scanned letter)</option><option>Email</option><option>Counter (in person)</option><option>Council form (manual entry)</option></select></div>
+   <div class="field"><label>Date received</label><input type="date" id="as-date" value="${today}"></div></div>
+   <div class="field"><label>Scanned document</label><div class="row"><input type="file" id="as-file" accept=".pdf,image/*" style="flex:1"><button class="btn small" type="button" onclick="asExtract()"><span class="ai"><span class="glow"></span></span>Extract text</button></div>
+     <div class="hint">PDF or image. Extracted text appears below for you to check before saving.</div></div>
+   <div class="f2"><div class="field"><label>Submitter</label><input id="as-name" placeholder="Name or organisation"></div>
+   <div class="field"><label>Property</label><select id="as-lot" onchange="$('as-addrw').classList.toggle('hide',this.value!=='other')">${Object.entries(LOTS).filter(([k,l])=>!l.subject).map(([k,l])=>`<option value="${k}">${esc(l.addr)} · ${l.ext}</option>`).join('')}<option value="other">Other address…</option></select></div></div>
+   <div class="field hide" id="as-addrw"><label>Address</label><input id="as-addr" placeholder="Street address"></div>
+   <div class="field"><label>Submission text</label><textarea id="as-text" placeholder="Type or paste the submission, or extract it from the scan"></textarea></div>
+   <div class="f2"><div class="field"><label>Stance</label><select id="as-stance"><option value="ai">Let AI suggest</option><option>Object</option><option>Support</option><option>Support in part</option><option>Comment</option></select></div>
+   <div class="field"><label>Counted as</label><select id="as-dup"><option value="">Unique submission</option>${commSubs().map(x=>`<option value="${x.id}">Duplicate of ${x.id} · ${esc(x.name)}</option>`).join('')}</select></div></div>`,
+   `<button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="doAddSub()">Add submission</button>`);
+}
+function asExtract(){
+  const f=$('as-file').files[0];
+  $('as-text').value = SAMPLE_SCAN_TEXT; if(!$('as-name').value) $('as-name').value='G. Moretti';
+  $('as-lot').value='191W'; $('as-stance').value='ai';
+  toast(`Text extracted${f?' from '+f.name:''} — check it before saving`);
+}
+function doAddSub(){
+  const name=$('as-name').value.trim(), text=$('as-text').value.trim();
+  if(!name || !text){ toast('Add the submitter and the submission text'); return; }
+  const n = commSubs().length + 1; let id='S-'+String(n).padStart(2,'0'); while(sub(id)) id='S-'+String(+id.slice(2)+1).padStart(2,'0');
+  const lotKey=$('as-lot').value, other=lotKey==='other', l=other?null:LOTS[lotKey];
+  const date=$('as-date').value||TODAY, late = date > rEnd(NOTIF.rounds[0]);
+  const st=$('as-stance').value, ai = st==='ai', dup=$('as-dup').value;
+  const ch=$('as-ch').value.replace(' (scanned letter)','').replace(' (in person)','').replace(' (manual entry)','');
+  const s={ id, considered:false, rec:fd(date), ord:SUBS.length+1, ch, name, lot:other?null:lotKey, addrFree:other?($('as-addr').value.trim()||'Address not given'):undefined, role:'Community',
+    relClaim: l?l.rel:'Not stated', rel: l?(/Side/.test(l.rel)?'Side boundary':/Opposite/.test(l.rel)?'Opposite':'Nearby'):'Outside notification area',
+    aud: l&&l.notified?'notified':'outside', timing: late?'late':'in', stance: ai?'Support in part':st, stanceSrc: ai?'inferred':'declared', conf: ai?0.81:null, confirmed: !ai,
+    include:null, disclosure:'Not provided', ack:'Not sent', withheld:false, dupOf: dup||undefined, text: dup? sub(dup).text : [text],
+    scan: ($('as-file').files[0]||{}).name };
+  if(dup){ s.stance=sub(dup).stance; }
+  SUBS.push(s); closeModal(); toast(`${id} added${dup?' as a duplicate of '+dup:''}`);
+  state.ctab='subs'; state.sfilter='all'; refresh(()=>openSub(id));
 }
 
 /* ================= SUBMISSION DRAWER ================= */
+ISSUES.forEach(i=>i.sources.forEach((x,ix)=>{
+  if(!x.by) x.by = ix===0 ? i.openedBy : x.k==='referral' ? (/Heritage/.test(x.ref)?'JJ':/Environmental/.test(x.ref)?'ND':/Traffic/.test(x.ref)?'JC':'SR') : x.k==='tlmeeting' ? 'MG' : 'SR';
+  if(!x.at){ const m=(x.ref||'').match(/\d{1,2} [A-Z][a-z]{2} \d{4}/); x.at = ix===0 ? i.openedAt.split(',')[0] : m ? m[0] : x.k==='submission'&&sub(x.ref) ? recDate(sub(x.ref)) : i.openedAt.split(',')[0]; }
+}));
+const REL_OPTS = ['Side boundary','Rear boundary','Opposite','Nearby','Outside notification area'];
+SUBS.forEach(s=>{ if(!s.rel) s.rel = !s.lot ? 'Outside notification area' : /Side/.test(s.relClaim)?'Side boundary' : /Rear/.test(s.relClaim)?'Rear boundary' : /Opposite/.test(s.relClaim)?'Opposite' : 'Nearby'; });
 function openSub(id){
-  drawerKey={t:'s',id}; const s=sub(id), ci=countInfo(s), linked=issuesForSub(s);
+  drawerKey={t:'s',id}; const s=sub(id), linked=issuesForSub(s);
   const lateCommunity = s.timing==='late' && s.role!=='Applicant / agent';
+  const sel = (opts, cur, on) => `<select class="btn small" onchange="${on}">${opts.map(o=>`<option value="${o[0]}" ${o[0]===cur?'selected':''}>${o[1]}</option>`).join('')}</select>`;
   $('drawer').innerHTML = `
   <div class="drawer-h"><div class="between"><div class="row"><b style="font-size:15px">${s.id}</b>${stanceChip(s)}${audChip(s)}${timingChip(s)}</div><button class="drawer-x" onclick="closeAll()">✕</button></div>
-    <div class="mt8" style="font-size:16px;font-weight:600">${esc(s.name)}</div><div class="small muted">${esc(propAddr(s))} · ${s.ch} · received ${esc(s.rec)}</div></div>
+    <div class="mt8" style="font-size:16px;font-weight:600">${esc(s.name)}</div><div class="small muted">${esc(propAddr(s))}</div></div>
   <div class="drawer-b">
-    ${s.role==='Applicant / agent'?`<div class="alert info mb12"><span class="ico">ℹ</span><div><b>Applicant correspondence.</b> Excluded from submission counts and panel criteria. Attachments are informal material and do not form part of the plan set — amendments must be lodged through the NSW Planning Portal.</div></div>`:''}
-    ${s.aud==='missed'?`<div class="alert neg mb12"><span class="ico">⚠</span><div><b>Not on the Round 1 recipient list.</b> ${esc(LOTS[s.lot].addr)} is a strata plan; letters went to Lot 1 only. Check strata expansion and decide whether other lots need notice. <div class="mt8"><button class="btn small" onclick="this.disabled=true;this.textContent='Added — recipients 15';toast('Lot 2 added to recipient list; notice task created')">Add Lot 2 to recipient list</button></div></div></div>`:''}
+    ${s.dupOf?`<div class="alert info mb12"><span class="ico">⧉</span><div><b>Duplicate of ${s.dupOf}.</b> Identical letter — counted once with ${s.dupOf}. Issues and stance follow the original.</div></div>`:''}
+    ${s.aud==='missed'?`<div class="alert neg mb12"><span class="ico">⚠</span><div><b>Notice letter returned to sender.</b> The rating record for ${esc(LOTS[s.lot].addr)} still lists the previous owner (sold September 2026), so the notice went to their old mailing address. Update the owner details and resend the notice. <div class="mt8"><button class="btn small" onclick="this.disabled=true;this.textContent='Notice resent to current owner';toast('Owner updated from submission; notice resent')">Resend notice to current owner</button></div></div></div>`:''}
     <div class="box"><div class="box-t">Classification</div>
       <dl class="kv">
-        <dt>Role</dt><dd>${s.role}</dd>
-        <dt>Stance</dt><dd>${stanceChip(s)} <span class="small muted">${s.stanceSrc==='declared'?'Declared by submitter':(s.confirmed?`Inferred by AI (${Math.round(s.conf*100)}%) · confirmed`:`Inferred by AI (${Math.round(s.conf*100)}%)`)}</span>
-          ${s.stanceSrc==='inferred'&&!s.confirmed?`<div class="row mt8"><button class="btn small primary" onclick="confirmStance('${s.id}')">Confirm ${s.stance}</button><select class="btn small" onchange="changeStance('${s.id}',this.value)"><option>Change…</option><option>Object</option><option>Support</option><option>Support in part</option><option>Comment</option></select></div>`:''}</dd>
-        <dt>Relationship</dt><dd>${esc(s.relClaim)} ${s.relVal?`<div class="small" style="color:var(--positive-text)">✓ Validated · ${esc(s.relVal.src)} · ${pname(s.relVal.by)}, ${s.relVal.at}</div>`:(s.lot?`<div class="row mt8"><span class="chip c-warn">Claimed by submitter</span><button class="btn small" onclick="validateRel('${s.id}')">Validate against rating record</button></div>`:`<div class="small muted">Address outside the notification catchment — no parcel relationship</div>`)}</dd>
-        <dt>Audience</dt><dd>${audChip(s)}</dd>
-        <dt>Timing</dt><dd>${timingChip(s)} ${s.timing==='late'?`<div class="small muted">Received after the exhibition closed on ${NOTIF.end}</div>`:''}
-          ${lateCommunity && s.include===null?`<div class="row mt8"><button class="btn small" onclick="lateDecision('${s.id}',true)">Include</button><button class="btn small" onclick="lateDecision('${s.id}',false)">Exclude</button><span class="tiny faint">a reason is recorded</span></div>`:''}${s.lateReason?`<div class="small muted mt8">Reason: ${esc(s.lateReason)}</div>`:''}</dd>
-        <dt>Panel count</dt><dd>${countChip(s)} <span class="small muted">${esc(ci.why)}</span></dd>
+        <dt>ID</dt><dd>${s.id}</dd>
+        <dt>Received</dt><dd>${esc(recDate(s))}</dd>
+        <dt>Channel</dt><dd>${s.ch}</dd>
+        <dt>Submitter</dt><dd>${esc(s.name)}</dd>
+        <dt>Property</dt><dd>${esc(propAddr(s))}</dd>
+        <dt>Relationship</dt><dd>${sel([['','Select…'],...REL_OPTS.map(o=>[o,o])], s.rel||'', `setRel('${s.id}',this.value)`)}</dd>
+        <dt>Audience</dt><dd>${sel([['notified','Notified'],['community','Community']], s.aud==='notified'?'notified':'community', `setAud('${s.id}',this.value)`)}</dd>
+        <dt>Timing</dt><dd>${timingChip(s)} ${s.timing==='late'?`<div class="small muted">Received after the exhibition ended on ${fd(rEnd(NOTIF.rounds[0]))}</div>`:''}
+          ${lateCommunity && s.include===null && !s.dupOf?`<div class="row mt8"><button class="btn small" onclick="lateDecision('${s.id}',true)">Include</button><button class="btn small" onclick="lateDecision('${s.id}',false)">Exclude</button><span class="tiny faint">a reason is recorded</span></div>`:''}${s.lateReason?`<div class="small muted mt8">Reason: ${esc(s.lateReason)}</div>`:''}</dd>
+        <dt>Stance</dt><dd>${stanceCell(s)} <span class="small muted">${s.stanceSrc==='declared'?'Declared by submitter':(s.confirmed?`Suggested by AI (${Math.round(s.conf*100)}%) · confirmed`:`Suggested by AI (${Math.round(s.conf*100)}%)`)}</span>
+          ${s.stanceSrc==='inferred'&&!s.confirmed&&!s.dupOf?`<div class="row mt8"><button class="btn small primary" onclick="confirmStance('${s.id}')">Confirm ${s.stance}</button><select class="btn small" onchange="changeStance('${s.id}',this.value)"><option>Change…</option><option>Object</option><option>Support</option><option>Support in part</option><option>Comment</option></select></div>`:''}</dd>
+        <dt>Issues</dt><dd>${linked.map(issueChip).join('')||'<span class="faint">—</span>'}</dd>
+        <dt>Status</dt><dd>${s.dupOf?consChip(s)+` <span class="small muted">follows ${s.dupOf}</span>`:`${consChip(s)} <button class="btn small" onclick="setConsidered('${s.id}',${!s.considered})">${s.considered?'Mark not considered':'Mark considered'}</button>`}</dd>
+        <dt>Counted as</dt><dd><select class="btn small" onchange="setDup('${s.id}',this.value)"><option value="">Unique submission</option>${commSubs().filter(x=>x.id!==s.id && !dupsOf(s).length).map(x=>`<option value="${x.id}" ${s.dupOf===x.id?'selected':''}>Duplicate of ${x.id} · ${esc(x.name)}</option>`).join('')}</select>
+          ${dupsOf(s).length?`<div class="small muted mt8">${dupsOf(s).length} identical letter${dupsOf(s).length>1?'s':''} grouped with this submission: ${dupsOf(s).map(d=>`<a onclick="openSub('${d.id}')">${d.id}</a> (${esc(propAddr(d))})`).join(', ')}</div>`:''}</dd>
         <dt>Donations (s 10.4)</dt><dd>${s.disclosure==='Not provided'?`<span class="chip c-warn">Not provided</span> <button class="btn small" onclick="this.disabled=true;this.textContent='Requested';toast('Disclosure request sent to submitter')">Request statement</button>`:esc(s.disclosure)}</dd>
-        <dt>Publication</dt><dd><label class="tgl"><input type="checkbox" ${s.withheld?'checked':''} onchange="sub('${s.id}').withheld=this.checked;toast(this.checked?'Name will be withheld on publication':'Name will be published')"><span class="sw"></span>Withhold name</label><div class="tiny faint mt8">Email and phone are always redacted from published copies.</div></dd>
+        <dt>Publication</dt><dd><label class="tgl"><input type="checkbox" ${s.withheld?'checked':''} onchange="sub('${s.id}').withheld=this.checked;toast(this.checked?'Name will be withheld on publication':'Name will be published')"><span class="sw"></span>Withhold name</label></dd>
         <dt>Acknowledged</dt><dd>${esc(s.ack)}</dd>
       </dl></div>
     <div class="box"><div class="box-t">Submission <span class="ai"><span class="glow"></span>Highlighted extracts are coded to issues</span></div>
-      <div class="subtext">${renderSubText(s)}</div>
-      ${s.attach?`<div class="mt8 small">📎 ${esc(s.attach)}</div>`:''}</div>
-    <div class="box"><div class="box-t">Issues raised <button class="btn small" onclick="openAddIssue('${s.id}')">＋ Create issue from this submission</button></div>
-      ${linked.length?linked.map(i=>`<div class="src-row" style="cursor:pointer" onclick="openIssue('${i.id}')"><span class="src-ico">${i.status==='Open'?'○':'●'}</span><div style="flex:1"><div class="strong small" style="color:var(--ink)">${i.id} · ${esc(i.title)}</div><div class="row mt8">${statusChip(i)}${impactChip(i.impact)}<span class="tiny faint">${i.theme}</span></div></div></div>`).join(''):'<div class="empty">No issues linked — support or applicant correspondence.</div>'}
+      <div class="subtext">${renderSubText(s)}</div></div>
+    <div class="box"><div class="box-t">Issues raised ${s.dupOf?`<span class="tiny faint">via ${s.dupOf}</span>`:`<button class="btn small" onclick="openAddIssue('${s.id}')">＋ Add Issue</button>`}</div>
+      ${linked.length?linked.map(i=>`<div class="src-row" style="cursor:pointer" onclick="openIssue('${i.id}')"><span class="src-ico">${i.status==='Open'?'○':'●'}</span><div style="flex:1"><div class="strong small" style="color:var(--ink)">${i.id} · ${esc(i.title)}</div><div class="row mt8">${issueStatusChip(i)}${impactChip(i.impact)}<span class="tiny faint">${i.theme}</span></div></div></div>`).join(''):'<div class="empty">No issues linked.</div>'}
     </div>
   </div>`;
   showDrawer();
 }
+function setRel(id,v){ const s=sub(id); s.rel=v||null; toast(`${id} relationship set to ${v||'not specified'}`); refresh(()=>openSub(id)); }
+function setAud(id,v){ const s=sub(id); s.aud = v==='notified' ? 'notified' : (s.aud==='missed'?'missed':'outside'); toast(`${id} audience set to ${v==='notified'?'Notified':'Community'}`); refresh(()=>openSub(id)); }
+
+function setConsidered(id,v){ const s=sub(id); s.considered=v; toast(`${id} marked ${v?'considered':'not considered'}`); refresh(()=>openSub(id)); }
+function setDup(id,v){ const s=sub(id); s.dupOf=v||undefined; if(v){ s.text=sub(v).text; s.stance=sub(v).stance; } toast(v?`${id} grouped as a duplicate of ${v} — counted once`:`${id} now counted as a unique submission`); refresh(()=>openSub(id)); }
 function confirmStance(id){ const s=sub(id); s.confirmed=true; toast(`${id} stance confirmed: ${s.stance}`); refresh(()=>openSub(id)); }
 function changeStance(id,v){ if(v==='Change…')return; const s=sub(id); s.stance=v; s.confirmed=true; s.stanceSrc='declared'; toast(`${id} stance set to ${v} by officer`); refresh(()=>openSub(id)); }
 function validateRel(id){ const s=sub(id); s.relVal={by:ME, at:NOW, src:'Rating record — owner match'}; toast(`${LOTS[s.lot].addr}: ${s.relClaim} validated`); refresh(()=>openSub(id)); }
@@ -831,79 +983,90 @@ function lateDecision(id, inc){
 }
 
 /* ================= ISSUES ================= */
+const curRfiRound = () => (RFI_ROUNDS.find(r=>r.status==='In progress')||{}).round;
+const issueStatus = i => i.status==='Closed' ? 'Closed' : (i.rfi.next || i.rfi.rounds.includes(curRfiRound())) ? 'RFI letter' : 'Open';
+const statusChip = i => issueStatusChip(i);
+const issueStatusChip = i => { const s=issueStatus(i); return s==='Closed'?`<span class="chip c-pos"><span class="dot"></span>Closed</span>`: s==='RFI letter'?`<span class="chip c-warn" title="${i.rfi.next?'In the next RFI letter (draft)':'In '+curRfiRound()+' — sent to applicant'}"><span class="dot"></span>RFI letter</span>`:`<span class="chip c-info"><span class="dot"></span>Open</span>`; };
+const LINK_SVG = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
+const AREA = { submission:'Submission', checklist:'Compliance checklist', sitevisit:'Site visit', referral:'Internal referral', application:'Application', tlmeeting:'Team leader meeting', officer:'Officer review' };
+function srcTip(i){ return [...new Set(i.sources.map(x=>AREA[x.k]))].join(', '); }
+const srcLink = i => `<span class="srclink" title="${esc(srcTip(i))}">${LINK_SVG}<b>${i.sources.length}</b></span>`;
 function vIssues(){
-  const F = { all:['All',()=>true], open:['Open',i=>i.status==='Open'], closed:['Closed',i=>i.status==='Closed'], sub:['Submission-led',isSubLed], sig:['Significant',i=>i.impact==='Significant'], rfi:['Flagged for next RFI',i=>i.rfi.next], norep:['Not in report',i=>!i.report.include] };
+  const F = { all:['All',()=>true], open:['Open',i=>issueStatus(i)==='Open'], rfi:['RFI letter',i=>issueStatus(i)==='RFI letter'], closed:['Closed',i=>i.status==='Closed'], sub:['Submission-led',isSubLed], sig:['Significant',i=>i.impact==='Significant'], norep:['Not in report',i=>!i.report.include] };
+  if(!F[state.ifilter]) state.ifilter='all';
   const list = ISSUES.filter(F[state.ifilter][1]);
-  const open = ISSUES.filter(i=>i.status==='Open');
-  const agreedNoRfi = open.filter(agreedPending);
+  const cnt = s => ISSUES.filter(i=>issueStatus(i)===s).length;
   let groups;
   if(state.igroup==='cat'){ groups={}; list.forEach(i=>{(groups[i.cat]=groups[i.cat]||[]).push(i)}); }
   else if(state.igroup==='stage'){ groups={}; STAGES.forEach(s=>{const g=list.filter(i=>i.stage===s); if(g.length) groups[s]=g;}); }
   else groups={'':list};
-  const row = i => `<tr class="click" onclick="openIssue('${i.id}')"><td class="strong">${i.id}</td><td><div class="strong" style="color:var(--ink)">${esc(i.title)}</div><div class="tiny faint">${i.theme} · ${esc(i.control)}</div></td>
-     <td class="small">${i.stage}</td><td>${srcChips(i)}</td><td class="small" style="text-align:center">${propsForIssue(i).length||'<span class="faint">—</span>'}</td><td>${impactChip(i.impact)}</td>
-     <td>${statusChip(i)}<div class="tiny faint row" style="gap:4px;margin-top:3px">${av(i.status==='Open'?i.openedBy:i.closedBy)} ${i.status==='Open'?'opened '+i.openedAt.split(',')[0]:'closed '+i.closedAt.split(',')[0]}</div></td>
-     <td onclick="event.stopPropagation()" style="white-space:nowrap">${roundChips(i)} <label class="tgl" title="Include in next RFI letter (${NEXT_ROUND})"><input type="checkbox" ${i.rfi.next?'checked':''} ${i.status==='Closed'?'disabled':''} onchange="toggleRfi('${i.id}',this.checked)"><span class="sw"></span></label></td>
-     <td onclick="event.stopPropagation()"><label class="tgl" title="Document in delegated report"><input type="checkbox" ${i.report.include?'checked':''} onchange="toggleReport('${i.id}',this.checked)"><span class="sw"></span></label></td></tr>`;
+  const row = i => `<tr class="click" onclick="openIssue('${i.id}')"><td class="strong">${i.id}</td><td class="strong" style="color:var(--ink)">${esc(i.title)}</td>
+     <td>${srcLink(i)}</td><td>${impactChip(i.impact)}</td><td>${issueStatusChip(i)}</td>
+     <td onclick="event.stopPropagation()"><label class="tgl" title="Document in assessment report"><input type="checkbox" ${i.report.include?'checked':''} onchange="toggleReport('${i.id}',this.checked)"><span class="sw"></span></label></td>
+     <td onclick="event.stopPropagation()" style="text-align:right"><button class="kebab" onclick="openMenu(event,'${i.id}')" title="Actions">⋯</button></td></tr>`;
   return `
   <div class="crumbs"><a onclick="go('overview')">Applications</a> / <a onclick="go('overview')">${APP.id}</a></div>
-  <div class="page-head"><div><div class="page-title"><button class="back" onclick="go('overview')">←</button>Issues</div><div class="page-sub">One register for every source — submissions, compliance checklist, site visit, referrals, team leader review</div></div>
-    <div class="head-actions"><button class="btn" onclick="go('rfi')">RFI letters</button><button class="btn" onclick="go('report')">Report preview</button><button class="btn primary" onclick="openAddIssue()">＋ Add issue</button></div></div>
-  <div class="stats mb12" style="grid-template-columns:repeat(5,1fr)">
-    <div class="stat"><div class="v">${open.length}</div><div class="l">Open</div></div><div class="stat pos"><div class="v">${ISSUES.length-open.length}</div><div class="l">Closed</div></div>
-    <div class="stat neg"><div class="v">${open.filter(i=>i.impact==='Significant').length}</div><div class="l">Significant, open</div></div>
-    <div class="stat"><div class="v">${rfiIssues().length}</div><div class="l">Flagged for next RFI (${NEXT_ROUND})</div></div><div class="stat"><div class="v">${ISSUES.filter(i=>i.report.include).length}</div><div class="l">Documented in report</div></div></div>
-  ${agreedNoRfi.map(i=>`<div class="alert warn mb8"><span class="ico">◎</span><div><b>${i.id}</b> — agreed outcome recorded by ${pname(i.comments.find(c=>c.type==='Agreed outcome').by)} on ${i.comments.find(c=>c.type==='Agreed outcome').at.split(',')[0]}, but the issue is not flagged for the RFI. <a onclick="openIssue('${i.id}')">Open issue</a></div></div>`).join('')}
-  <div class="alert neu mb12"><span class="ico">◔</span><div><b>This list may be incomplete.</b> 4 of 21 checklist items outstanding · Engineering referral unassigned · Heritage referral in progress.</div></div>
+  <div class="page-head"><div><div class="page-title"><button class="back" onclick="go('overview')">←</button>Issues</div><div class="page-sub">Issue register for the application</div></div>
+    <div class="head-actions"><button class="btn primary" onclick="openAddIssue()">＋ Add issue</button></div></div>
+  <div class="stats mb16" style="grid-template-columns:repeat(5,1fr)">
+    <div class="stat"><div class="v">${cnt('Open')}</div><div class="l">Open</div></div>
+    <div class="stat warn"><div class="v">${cnt('RFI letter')}</div><div class="l">RFI letter</div></div>
+    <div class="stat pos"><div class="v">${cnt('Closed')}</div><div class="l">Closed</div></div>
+    <div class="stat neg"><div class="v">${ISSUES.filter(i=>i.status==='Open'&&i.impact==='Significant').length}</div><div class="l">Significant, not closed</div></div>
+    <div class="stat"><div class="v">${ISSUES.filter(i=>i.report.include).length}</div><div class="l">In assessment report</div></div></div>
   <div class="between mb12"><div class="filters">${Object.entries(F).map(([k,v])=>`<button class="ftab ${state.ifilter===k?'active':''}" onclick="state.ifilter='${k}';render()">${v[0]}</button>`).join('')}</div>
-    <div class="row small muted">Group by <div class="filters">${[['none','None'],['cat','Impact category'],['stage','Where raised']].map(g=>`<button class="ftab ${state.igroup===g[0]?'active':''}" onclick="state.igroup='${g[0]}';render()">${g[1]}</button>`).join('')}</div></div></div>
-  <div class="card" style="overflow:hidden"><table class="dtable"><tr><th>ID</th><th>Issue</th><th>Raised in</th><th>Sources</th><th style="text-align:center">Props</th><th>Impact</th><th>Status</th><th>RFI · next</th><th>Report</th></tr>
-  ${Object.entries(groups).map(([g,is])=>(g?`<tr><td colspan="9" style="background:#fafafc;font-weight:600;color:var(--ink);font-size:11px">${g} <span class="faint">(${is.length})</span></td></tr>`:'')+is.map(row).join('')).join('')}
+    <div class="row small muted">Group by <div class="filters">${[['none','None'],['cat','Impact category'],['stage','Stage']].map(g=>`<button class="ftab ${state.igroup===g[0]?'active':''}" onclick="state.igroup='${g[0]}';render()">${g[1]}</button>`).join('')}</div></div></div>
+  <div class="card" style="overflow:visible"><table class="dtable"><tr><th>ID</th><th>Issue</th><th>Source</th><th>Impact</th><th>Status</th><th>Report</th><th></th></tr>
+  ${Object.entries(groups).map(([g,is])=>(g?`<tr><td colspan="7" style="background:#fafafc;font-weight:600;color:var(--ink);font-size:11px">${g} <span class="faint">(${is.length})</span></td></tr>`:'')+is.map(row).join('')).join('')}
   </table></div>`;
 }
+function openMenu(e, id){
+  e.stopPropagation(); const i=iss(id); const m=$('menu'); const st=issueStatus(i);
+  const items = [ ['Edit issue',`openIssue('${id}')`] ];
+  if(i.status==='Open') items.push(i.rfi.next?['Remove from next RFI letter',`toggleRfi('${id}',false)`]:(st==='RFI letter'?null:['Add to next RFI letter',`toggleRfi('${id}',true)`]));
+  items.push(i.report.include?['Remove from assessment report',`toggleReport('${id}',false)`]:['Include in assessment report',`toggleReport('${id}',true)`]);
+  items.push(i.status==='Open'?['Close issue',`openClose('${id}')`]:['Reopen issue',`openReopen('${id}')`]);
+  m.innerHTML = items.filter(Boolean).map(x=>`<div class="menu-item" onclick="$('menu').classList.remove('show');${x[1]}">${x[0]}</div>`).join('');
+  const r=e.currentTarget.getBoundingClientRect(); m.style.top=(r.bottom+window.scrollY+4)+'px'; m.style.left=(r.right+window.scrollX-200)+'px'; m.classList.add('show');
+}
+document.addEventListener('click', ()=>{ const m=$('menu'); if(m) m.classList.remove('show'); });
+
 function toggleRfi(id, v){ const i=iss(id); i.rfi.next=v; log(i, v?`Flagged for next RFI (${NEXT_ROUND})`:`Removed from next RFI (${NEXT_ROUND})`); toast(v?`${id} added to ${NEXT_ROUND} draft`:`${id} removed from ${NEXT_ROUND} draft`); refresh(); }
 function toggleReport(id, v){ const i=iss(id);
   if(!v && isSubLed(i)){ modal('Remove from delegated report?', `<div class="alert warn"><span class="ico">⚠</span><div>${id} was raised in submissions. Submissions must be considered under s 4.15(1)(d). Removing it drops it from the submissions table in the report.</div></div><div class="field mt12"><label>Reason</label><textarea id="rr" placeholder="e.g. merged into another issue"></textarea></div>`,
       `<button class="btn" onclick="closeModal();refresh()">Keep in report</button><button class="btn danger" onclick="(function(){const r=$('rr').value.trim();if(!r){toast('A reason is required');return;}const i=iss('${id}');i.report.include=false;log(i,'Removed from report — '+r);closeModal();refresh();toast('${id} removed from report')})()">Remove</button>`); return; }
   i.report.include=v; log(i, v?'Included in delegated report':'Removed from delegated report'); toast(v?`${id} will be documented in the report`:`${id} removed from report`); refresh(); }
 
+const whoWhen = x => `<div class="row tiny faint mt8" style="gap:6px">${av(x.by)} ${pname(x.by)} · ${x.k==='submission'?'linked':'added'} ${esc(x.at)}</div>`;
 function openIssue(id){
-  drawerKey={t:'i',id}; const i=iss(id); const ag=i.comments.filter(c=>c.type==='Agreed outcome');
-  const ss = subsForIssue(i); const props = propsForIssue(i); const side = new Set(ss.filter(s=>relOf(s)==='Side boundary').map(propKey)).size;
+  drawerKey={t:'i',id}; const i=iss(id);
   const sel = (arr,v,on) => `<select class="btn small" onchange="${on}">${arr.map(a=>`<option ${a===v?'selected':''}>${a}</option>`).join('')}</select>`;
   $('drawer').innerHTML = `
-  <div class="drawer-h"><div class="between"><div class="row"><b style="font-size:15px">${i.id}</b>${statusChip(i)}${impactChip(i.impact)}${i.rfi.next?`<span class="chip c-info">Next RFI</span>`:''}${i.report.include?'<span class="chip c-neu">In report</span>':''}</div><button class="drawer-x" onclick="closeAll()">✕</button></div>
+  <div class="drawer-h"><div class="between"><div class="row"><b style="font-size:15px">${i.id}</b>${issueStatusChip(i)}${impactChip(i.impact)}${i.report.include?'<span class="chip c-neu">In report</span>':''}</div><button class="drawer-x" onclick="closeAll()">✕</button></div>
     <div class="mt8" style="font-size:16px;font-weight:600">${esc(i.title)}</div>
     <div class="row small muted mt8">${av(i.openedBy)} Opened by ${pname(i.openedBy)} · ${i.openedAt} · raised in <b style="color:var(--ink-med)">${i.stage}</b></div>
     <div class="row mt12">${i.status==='Open'?`<button class="btn primary small" onclick="openClose('${i.id}')">Close issue</button>`:`<button class="btn small" onclick="openReopen('${i.id}')">Reopen</button>`}</div></div>
   <div class="drawer-b">
     ${i.status==='Closed'?`<div class="alert info mb12" style="background:var(--positive-bg);color:var(--positive-text)"><span class="ico">✓</span><div><b>Closed · ${i.closure.type}</b> — ${esc(i.closure.note)}${i.closure.ref?` <span class="chip c-out">${esc(i.closure.ref)}</span>`:''}<div class="small mt8">${pname(i.closedBy)} · ${i.closedAt}</div></div></div>`:''}
-    ${agreedPending(i)?`<div class="alert warn mb12"><span class="ico">◎</span><div><b>Agreed outcome not yet actioned.</b> Recorded by ${pname(ag[0].by)} on ${ag[0].at.split(',')[0]}. This issue is not flagged for the RFI letter.<div class="mt8"><button class="btn small" onclick="toggleRfi('${i.id}',true)">Flag for next RFI</button></div></div></div>`:''}
+    <div class="box"><div class="box-t">Issue description</div>
+      <div class="field" style="margin-bottom:0"><textarea onblur="iss('${i.id}').desc=this.value" placeholder="What is the issue, and where does it occur?">${esc(i.desc||'')}</textarea></div></div>
     <div class="box"><div class="box-t">Classification</div>
       <dl class="kv"><dt>Impact category</dt><dd>${sel(Object.keys(CATS),i.cat,`setCat('${i.id}',this.value)`)} ${sel(CATS[i.cat]||[],i.theme,`setF('${i.id}','theme',this.value)`)}</dd>
-      <dt>Control</dt><dd>${esc(i.control)}</dd>
       <dt>Planning relevance</dt><dd>${sel(['Planning','Non-planning'],i.rel,`setF('${i.id}','rel',this.value)`)}</dd>
-      <dt>Impact level</dt><dd>${sel(['Significant','Minor','None'],i.impact,`setF('${i.id}','impact',this.value)`)}</dd>
-      <dt>Raised by</dt><dd>${props.length?`${props.length} propert${props.length>1?'ies':'y'}${side?` · <b>${side} side-boundary</b>`:''}`:'<span class="faint">No submissions linked</span>'}</dd></dl></div>
-    <div class="box"><div class="box-t">Where it came from <span class="tiny faint">${i.sources.length} source${i.sources.length>1?'s':''}</span></div>
-      ${i.sources.map(x=>{ const K=SRC_KIND[x.k]; if(x.k==='submission'){ const s=sub(x.ref); const ex=extractFor(s,i.id); return `<div class="src-row"><span class="src-ico">${K.ico}</span><div style="flex:1"><div class="row wrap"><a onclick="openSub('${s.id}')"><b>${s.id}</b> · ${esc(s.name)}</a>${stanceChip(s)}<span class="tiny faint">${esc(propAddr(s))} · ${esc(relOf(s))}</span></div>${ex.length?ex.map(e=>`<div class="quote mt8">“${esc(e)}”</div>`).join(''):'<div class="tiny faint mt8">Whole submission linked</div>'}</div></div>`; }
-        return `<div class="src-row"><span class="src-ico">${K.ico}</span><div style="flex:1"><div class="small"><b>${K.l}</b> · ${esc(x.ref)}</div>${x.note?`<div class="small muted">${esc(x.note)}</div>`:''}</div></div>`; }).join('')}
-    </div>
-    <div class="box"><div class="box-t">Commentary</div>
-      ${i.comments.length?i.comments.map(c=>`<div class="cmt ${c.type==='Agreed outcome'?'agreed':''}">${av(c.by)}<div class="cmt-body"><div class="cmt-meta"><b style="color:var(--ink)">${pname(c.by)}</b>${c.at}<span class="chip ${c.type==='Agreed outcome'?'c-pos':'c-neu'}">${c.type}</span></div>${esc(c.text)}</div></div>`).join(''):'<div class="empty mb8">No commentary yet.</div>'}
-      <div class="mt12"><div class="row mb8"><select class="btn small" id="ctype"><option>Note</option><option>Site visit</option><option>Agreed outcome</option><option>Team leader review</option></select><span class="tiny faint">“Agreed outcome” is checked when the issue is closed</span></div>
-      <div class="field" style="margin-bottom:6px"><textarea id="ctext" placeholder="Add commentary…" style="min-height:56px"></textarea></div><button class="btn small" onclick="addComment('${i.id}')">Add commentary</button></div></div>
+      <dt>Impact level</dt><dd>${sel(['Significant','Minor','None'],i.impact,`setF('${i.id}','impact',this.value)`)}</dd></dl></div>
+    <details class="box audit-box" open><summary class="box-t">Where it came from <span class="tiny faint">${i.sources.length} source${i.sources.length>1?'s':''}</span></summary><div class="mt8">
+      ${i.sources.map(x=>{ const K=SRC_KIND[x.k]; if(x.k==='submission'){ const s=sub(x.ref); const ex=extractFor(s,i.id); return `<div class="src-row"><span class="src-ico">${K.ico}</span><div style="flex:1"><div class="row wrap"><a onclick="openSub('${s.id}')"><b>${s.id}</b> · ${esc(s.name)}</a>${stanceChip(s)}<span class="tiny faint">${esc(propAddr(s))}</span></div>${whoWhen(x)}${ex.length?ex.map(e=>`<div class="quote mt8">“${esc(e)}”</div>`).join(''):'<div class="tiny faint mt8">Whole submission linked</div>'}</div></div>`; }
+        return `<div class="src-row"><span class="src-ico">${K.ico}</span><div style="flex:1"><div class="small"><b>${K.l}</b>${x.ref && !x.ref.startsWith(K.l) && !x.ref.startsWith(K.l.split(' ')[0]) ? ' · '+esc(x.ref.replace(/ \d{1,2} [A-Z][a-z]{2} \d{4}$/,'')) : ''}</div>${whoWhen(x)}</div></div>`; }).join('')}
+    </div></details>
     <div class="box"><div class="box-t">RFI letter <label class="tgl"><input type="checkbox" ${i.rfi.next?'checked':''} ${i.status==='Closed'?'disabled':''} onchange="toggleRfi('${i.id}',this.checked)"><span class="sw"></span>Include in next letter (${NEXT_ROUND})</label></div>
-      <div class="small muted mb8">History: ${i.rfi.rounds.length?i.rfi.rounds.map(r=>`${r} (${(RFI_ROUNDS.find(x=>x.round===r)||{}).status||''})`).join(' · '):'not yet in an RFI'}</div>
-      <div class="field" style="margin-bottom:0"><label>Wording for the applicant <span class="faint">(shown in the RFI letter, not the internal title)</span></label><textarea onblur="iss('${i.id}').rfiText=this.value" placeholder="Describe what the applicant needs to address…">${esc(i.rfiText)}</textarea>
-      <div class="hint">Responses are managed in the RFI workflow. Correlate any amendment to this issue when you close it.</div></div></div>
-    <div class="box"><div class="box-t">Delegated report <label class="tgl"><input type="checkbox" ${i.report.include?'checked':''} onchange="toggleReport('${i.id}',this.checked)"><span class="sw"></span>Document in report</label></div>
-      <dl class="kv mb8"><dt>Section</dt><dd class="small">${esc(i.report.section)}</dd></dl>
-      <div class="field" style="margin-bottom:0"><label>Response / assessment text</label><textarea onblur="iss('${i.id}').reportText=this.value" placeholder="How this issue was considered…">${esc(i.reportText)}</textarea></div></div>
-    <div class="box"><div class="box-t">Audit trail</div><div class="audit">${i.audit.slice().reverse().map(a=>`<div>${a.at} · ${pname(a.by)} — ${esc(a.t)}</div>`).join('')}</div></div>
+      <div class="field" style="margin-bottom:0"><label>Wording for the applicant</label><textarea onblur="iss('${i.id}').rfiText=this.value" placeholder="Describe what the applicant needs to address…">${esc(i.rfiText)}</textarea></div></div>
+    <div class="box"><div class="box-t">Assessment report <label class="tgl"><input type="checkbox" ${i.report.include?'checked':''} onchange="toggleReport('${i.id}',this.checked)"><span class="sw"></span>Document in report</label></div>
+      <div class="field" style="margin-bottom:0"><label>Assessment commentary</label><textarea onblur="iss('${i.id}').reportText=this.value" placeholder="How this issue was considered…">${esc(i.reportText)}</textarea></div></div>
+    <details class="box audit-box"><summary class="box-t">Audit trail <span class="tiny faint">${i.audit.length} entries</span></summary><div class="audit mt8">${i.audit.slice().reverse().map(a=>`<div>${a.at} · ${pname(a.by)} — ${esc(a.t)}</div>`).join('')}</div></details>
   </div>`;
   showDrawer();
 }
+
 function setF(id,k,v){ const i=iss(id); i[k]=v; log(i,`${k==='rel'?'Planning relevance':k==='impact'?'Impact level':'Theme'} set to ${v}`); refresh(()=>openIssue(id)); }
 function setCat(id,v){ const i=iss(id); i.cat=v; i.theme=CATS[v][0]; if(v==='Non-planning'){i.rel='Non-planning'; i.impact='None';} log(i,`Category set to ${v}`); refresh(()=>openIssue(id)); }
 function addComment(id){ const t=$('ctext').value.trim(); if(!t){toast('Write a comment first');return;} const i=iss(id); const type=$('ctype').value; i.comments.push({by:ME, at:stamp(), type, text:t}); log(i,`Commentary added (${type})`); toast('Commentary added'); refresh(()=>openIssue(id)); }
@@ -926,28 +1089,59 @@ function doClose(id){ const i=iss(id); const note=$('cnote').value.trim(); if(!n
   i.audit.push({at, by:ME, t:`Closed · ${i.closure.type}${i.closure.ref?' · '+i.closure.ref:''}`}); closeModal(); toast(`${id} closed`); refresh(()=>openIssue(id)); }
 function openReopen(id){ modal(`Reopen ${id}`, `<div class="field"><label>Reason</label><textarea id="ro"></textarea></div>`, `<button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="(function(){const r=$('ro').value.trim();if(!r){toast('A reason is required');return;}const i=iss('${id}');i.status='Open';i.closedBy=null;i.closedAt=null;i.closure=null;log(i,'Reopened — '+r);closeModal();toast('${id} reopened');refresh(()=>openIssue('${id}'))})()">Reopen</button>`); }
 
+const STAGE_OF = { submission:'Notification & submissions', checklist:'Assessment', sitevisit:'Site visit', referral:'Referral', application:'Lodgement', tlmeeting:'Team leader review', officer:'Assessment' };
+let addCtx = { subId:null, mode:null, pick:null };
 function openAddIssue(subId){
+  addCtx = { subId:subId||null, mode:null, pick:null };
   const s = subId?sub(subId):null;
-  modal('Add issue', `
-   <div class="field"><label>Issue</label><input id="nt" placeholder="Short description, e.g. Overlooking from rear deck"></div>
-   <div class="f2"><div class="field"><label>Raised in</label><select id="nst">${STAGES.map(x=>`<option ${s&&x==='Notification & submissions'?'selected':''}>${x}</option>`).join('')}</select></div>
-   <div class="field"><label>Source</label><select id="nsk">${Object.entries(SRC_KIND).map(([k,v])=>`<option value="${k}" ${s&&k==='submission'?'selected':''}>${v.l}</option>`).join('')}</select></div></div>
-   <div class="field"><label>Source reference</label><select id="nsr">${s?`<option value="${s.id}">${s.id} · ${esc(s.name)}</option>`:''}${SUBS.filter(x=>!s||x.id!==s.id).map(x=>`<option value="${x.id}">${x.id} · ${esc(x.name)}</option>`).join('')}<option value="other">Other (enter in commentary)</option></select><div class="hint">For non-submission sources choose “Other”.</div></div>
-   <div class="f2"><div class="field"><label>Impact category</label><select id="nc" onchange="$('nth').innerHTML=CATS[this.value].map(t=>'<option>'+t+'</option>').join('')">${Object.keys(CATS).map(c=>`<option>${c}</option>`).join('')}</select></div>
-   <div class="field"><label>Theme</label><select id="nth">${CATS['Built environment'].map(t=>`<option>${t}</option>`).join('')}</select></div></div>
-   <div class="f2"><div class="field"><label>Impact level</label><select id="ni"><option>Significant</option><option selected>Minor</option><option>None</option></select></div>
-   <div class="field"><label>Options</label><label class="row small"><input type="checkbox" id="nrfi"> Flag for next RFI</label><label class="row small"><input type="checkbox" id="nrep" checked> Document in report</label></div></div>
-   <div class="field"><label>Commentary</label><textarea id="ncm" placeholder="Optional"></textarea></div>`,
-   `<button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="doAdd()">Add issue</button>`);
+  modal(s?`Add issue from ${s.id}`:'Add issue', `
+   <div class="field ta-wrap"><label>Issue</label><input id="nt" autocomplete="off" placeholder="Start typing to find an existing issue…" oninput="taSearch()" onfocus="taSearch()">
+     <div class="ta-list" id="talist"></div>
+     <div class="hint">Search existing issues in this assessment. If it isn't there, create a new one.</div></div>
+   <div id="ta-existing" class="hide"></div>
+   <div id="ta-new" class="hide">
+     <div class="field"><label>Description</label><textarea id="ndesc" placeholder="What is the issue, and where does it occur?"></textarea></div>
+     <div class="f2"><div class="field"><label>Source</label><select id="nsk" onchange="$('nsrw').classList.toggle('hide',this.value!=='submission')">${Object.entries(SRC_KIND).map(([k,v])=>`<option value="${k}" ${(s?k==='submission':k==='officer')?'selected':''}>${v.l}</option>`).join('')}</select></div>
+     <div class="field ${s?'':'hide'}" id="nsrw"><label>Submission</label><select id="nsr">${SUBS.map(x=>`<option value="${x.id}" ${s&&x.id===s.id?'selected':''}>${x.id} · ${esc(x.name)}</option>`).join('')}</select></div></div>
+     <div class="f2"><div class="field"><label>Impact category</label><select id="nc" onchange="$('nth').innerHTML=CATS[this.value].map(t=>'<option>'+t+'</option>').join('')">${Object.keys(CATS).map(c=>`<option>${c}</option>`).join('')}</select></div>
+     <div class="field"><label>Theme</label><select id="nth">${CATS['Built environment'].map(t=>`<option>${t}</option>`).join('')}</select></div></div>
+     <div class="f2"><div class="field"><label>Impact level</label><select id="ni"><option>Significant</option><option selected>Minor</option><option>None</option></select></div>
+     <div class="field"><label>Options</label><label class="row small"><input type="checkbox" id="nrfi"> Flag for next RFI</label><label class="row small"><input type="checkbox" id="nrep" checked> Document in report</label></div></div>
+   </div>`,
+   `<button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" id="addbtn" disabled onclick="doAdd()">Add issue</button>`);
+  setTimeout(()=>$('nt').focus(),50);
 }
-function doAdd(){ const t=$('nt').value.trim(); if(!t){toast('Give the issue a short description');return;}
-  const id='I-'+String(ISSUES.length+1).padStart(2,'0'); const at=stamp(); const k=$('nsk').value, r=$('nsr').value;
-  const src = k==='submission' && r!=='other' ? {k, ref:r} : {k, ref: k==='submission'?'Submission (unspecified)':SRC_KIND[k].l, note:''};
+function taSearch(){
+  const q=$('nt').value.trim().toLowerCase(); const l=$('talist');
+  if(addCtx.mode){ addCtx.mode=null; addCtx.pick=null; $('ta-existing').classList.add('hide'); $('ta-new').classList.add('hide'); $('addbtn').disabled=true; }
+  const hits = ISSUES.filter(i=>!q || (i.id+' '+i.title+' '+i.theme).toLowerCase().includes(q)).slice(0,6);
+  l.innerHTML = hits.map(i=>`<div class="ta-item" onmousedown="taPick('${i.id}')"><span class="small"><b>${i.id}</b> · ${esc(i.title)}</span>${statusChip(i)}</div>`).join('')
+    + (q?`<div class="ta-item ta-new" onmousedown="taNew()">＋ Create new issue “${esc($('nt').value.trim())}”</div>`:'');
+  l.classList.toggle('show', hits.length>0 || !!q);
+}
+document.addEventListener('mousedown', e=>{ const l=$('talist'); if(l && !e.target.closest('.ta-wrap')) l.classList.remove('show'); });
+function taPick(id){
+  const i=iss(id); addCtx.mode='existing'; addCtx.pick=id; $('nt').value=`${i.id} · ${i.title}`; $('talist').classList.remove('show');
+  const already = addCtx.subId && i.sources.some(x=>x.k==='submission'&&x.ref===addCtx.subId);
+  $('ta-existing').innerHTML = `<div class="box"><div class="row mb8">${statusChip(i)}${impactChip(i.impact)}<span class="tiny faint">${i.theme}</span></div>
+    <div class="small muted">${subsForIssue(i).length} submission${subsForIssue(i).length===1?'':'s'} linked · raised in ${i.stage}</div>
+    ${addCtx.subId?`<div class="small mt8">${already?`${addCtx.subId} is already linked to this issue.`:`${addCtx.subId} will be linked to this issue as a source.`}</div>`:''}</div>`;
+  $('ta-existing').classList.remove('hide'); $('ta-new').classList.add('hide');
+  const b=$('addbtn'); b.disabled=!!already; b.textContent = addCtx.subId?'Link to issue':'Open issue';
+}
+function taNew(){ addCtx.mode='new'; $('talist').classList.remove('show'); $('ta-existing').classList.add('hide'); $('ta-new').classList.remove('hide'); const b=$('addbtn'); b.disabled=false; b.textContent='Create issue'; setTimeout(()=>$('ndesc').focus(),30); }
+function doAdd(){
+  if(addCtx.mode==='existing'){ const i=iss(addCtx.pick);
+    if(addCtx.subId){ i.sources.push({k:'submission', ref:addCtx.subId, by:ME, at:NOW}); log(i,`Source linked: ${addCtx.subId}`); closeModal(); toast(`${addCtx.subId} linked to ${i.id}`); refresh(()=>openIssue(i.id)); }
+    else { closeModal(); openIssue(i.id); } return; }
+  const t=$('nt').value.trim(); if(!t){toast('Give the issue a title');return;}
+  const id='I-'+String(ISSUES.length+1).padStart(2,'0'); const at=stamp(); const k=$('nsk').value;
+  const src = k==='submission' ? {k, ref:$('nsr').value, by:ME, at:NOW} : {k, ref:SRC_KIND[k].l, by:ME, at:NOW};
   const cat=$('nc').value;
-  const i={id, title:t, stage:$('nst').value, cat, theme:$('nth').value, control:'—', rel:cat==='Non-planning'?'Non-planning':'Planning', impact:$('ni').value, status:'Open', openedBy:ME, openedAt:at, closedBy:null, closedAt:null, closure:null,
-   sources:[src], rfi:{rounds:[], next:$('nrfi').checked}, rfiText:'', report:{include:$('nrep').checked, section:k==='submission'?'s 4.15(1)(d) Submissions':'s 4.15(1)(b) Likely impacts'}, reportText:'', comments:[], audit:[{at, by:ME, t:`Opened · source: ${$('nst').value}`}]};
-  const cm=$('ncm').value.trim(); if(cm) i.comments.push({by:ME, at, type:'Note', text:cm});
-  ISSUES.push(i); closeModal(); toast(`${id} added`); refresh(()=>openIssue(id)); }
+  const i={id, title:t, desc:$('ndesc').value.trim(), stage:STAGE_OF[k], cat, theme:$('nth').value, control:'—', rel:cat==='Non-planning'?'Non-planning':'Planning', impact:$('ni').value, status:'Open', openedBy:ME, openedAt:at, closedBy:null, closedAt:null, closure:null,
+   sources:[src], rfi:{rounds:[], next:$('nrfi').checked}, rfiText:'', report:{include:$('nrep').checked, section:k==='submission'?'s 4.15(1)(d) Submissions':'s 4.15(1)(b) Likely impacts'}, reportText:'', comments:[], audit:[{at, by:ME, t:`Opened · source: ${SRC_KIND[k].l}`}]};
+  ISSUES.push(i); closeModal(); toast(`${id} created`); refresh(()=>openIssue(id));
+}
 
 /* ================= RFI ================= */
 function vRfi(){
@@ -991,8 +1185,8 @@ function vReport(){
     <div class="head-actions"><button class="btn" onclick="go('issues')">Edit issues</button><button class="btn primary" onclick="toast('Inserted into assessment report (prototype)')">Insert into report</button></div></div>
   <div class="doc">
     <h2>Notification and submissions — s 4.15(1)(d)</h2>
-    <p class="gen">The application was exhibited from ${NOTIF.start} to ${NOTIF.end} (14 days) under the statewide Community Participation Plan. ${NOTIF.devTypes.map(d=>d.t.toLowerCase()).join(' and ')} are both listed in Table 6 of the Plan, but the application seeks a variation to the height of buildings development standard under clause 4.6 and was therefore exhibited. Notice was given by letter to ${RECIPIENT_COUNT} properties, a site notice, Council's DA tracker and the NSW Planning Portal (EXH-1187420).</p>
-    <p class="gen">${cs.length} submissions were received from ${new Set(cs.map(propKey)).size} properties: ${by('Object')} objecting, ${by('Support in part')} supporting in part and ${by('Support')} in support. ${late.length} submission${late.length===1?' was':'s were'} received after the exhibition closed${late.filter(s=>s.include===true).length?` and ${late.filter(s=>s.include===true).length===late.length?'was':'were'} considered`:''}${late.filter(s=>s.include===null).length?' (decision pending)':''}. Correspondence from the applicant's architect is not counted as a submission. Objections were received from ${counted} unique properties for the purposes of the Local Planning Panel referral criteria.</p>
+    <p class="gen">The application was exhibited from ${fd(NOTIF.rounds[0].start)} to ${fd(rEnd(NOTIF.rounds[0]))} (${NOTIF.rounds[0].period} days) under the statewide Community Participation Plan. ${NOTIF.devTypes.map(d=>d.t.toLowerCase()).join(' and ')} are both listed in Table 6 of the Plan, but the application seeks a variation to the height of buildings development standard under clause 4.6 and was therefore exhibited. Notice was given by letter to ${RECIPIENT_COUNT} properties, a site notice, Council's DA tracker and the NSW Planning Portal (EXH-1187420).</p>
+    <p class="gen">${cs.length} submissions were received (${SUBS.length} items, ${SUBS.filter(x=>x.dupOf).length} of them identical letters counted with the original submission): ${by('Object')} objecting, ${by('Support in part')} supporting in part and ${by('Support')} in support. ${late.length} submission${late.length===1?' was':'s were'} received after the exhibition closed${late.filter(s=>s.include===true).length?` and ${late.filter(s=>s.include===true).length===late.length?'was':'were'} considered`:''}${late.filter(s=>s.include===null).length?' (decision pending)':''}. </p>
     <h3>Issues raised in submissions</h3>
     <table><tr><th style="width:30%">Issue</th><th style="width:16%">Raised by</th><th>Response</th><th style="width:11%">Status</th></tr>
     ${subIss.map(i=>`<tr><td><b>${esc(i.title)}</b><br><span style="color:#888;font-size:11px">${i.id} · ${i.theme}</span></td><td>${propsForIssue(i).length} propert${propsForIssue(i).length>1?'ies':'y'}</td><td class="gen">${resp(i)}</td><td>${i.status==='Closed'?'Resolved — '+i.closure.type.toLowerCase():'Unresolved'}</td></tr>`).join('')}
